@@ -6,6 +6,7 @@ type TopologyData struct {
 	Links    []TopologyLink    `json:"links,required"`
 	NodeSets []TopologyNodeSet `json:"nodeSet,required"`
 	Groups   []TopologyGroup   `json:"groups,required"`
+	Views    map[string]string `json:"views,required"`
 }
 
 type TopologyNode struct {

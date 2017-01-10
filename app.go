@@ -130,12 +130,17 @@ func CloudTopology(ctx context.Context, rw http.ResponseWriter, r *http.Request)
 
 	groupList := make([]TopologyGroup, 0)
 
+	viewList := make(map[string]string, 2)
+	viewList["Cloud Instances"] = "http://localhost:9090/topology/cloudInstanceTopology"
+	viewList["Cloud Network"] = "http://localhost:9090/topology/cloudNetworTopology"
+
 	cloudTopologyData := TopologyData{
 		Title:    topologyTitle,
 		Nodes:    nodeList,
 		Links:    linkList,
 		NodeSets: nodeSetList,
 		Groups:   groupList,
+		Views:    viewList,
 	}
 
 	luddite.WriteResponse(rw, http.StatusOK, cloudTopologyData)

@@ -9,7 +9,7 @@
                     name: 'list',
                     tag: 'nav',
                     props: {
-                        'class': 'w3-sidenav w3-white'
+                        'class': 'w3-sidenav w3-gray'
                     },
                     style: {
                         'width': '5%',

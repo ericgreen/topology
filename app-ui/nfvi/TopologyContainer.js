@@ -228,7 +228,7 @@
 					return this.view('topology');
 				}
 			},
-            actionBar: null
+            actionBar: null,
         },
         methods: {
             init: function(options) {

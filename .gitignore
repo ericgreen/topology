@@ -1,0 +1,9 @@
+topology
+/Godeps/_workspace
+/**/bin
+/**/install
+/**/.install
+/**/service.log
+/**/trace.yaml
+/**/report.xml
+/**/*.test

@@ -21,6 +21,10 @@
 						{
 							tag: 'h1',
 							content: 'NFVI Toplogy Viewer',
+						},
+						{
+							tag: 'h5',
+							content: '{#topologyTitle}'
 						}
 					]
 				},
@@ -107,43 +111,51 @@
 						},
 					]
 				},
+				/*
 				{
 					tag: 'h2',
 					content: '{#topologyTitle}',
 					props: {
 						style : {
-							'text-align': 'center'
+							'text-align': 'center',
+							'margin-left' : '10%'
 						}
 					}
 				},
+				*/
 			]
 		},
 		methods: {
 			'loadCloudTopology': function (sender, event) {
+				event.preventDefault();
 				var topo = this.topology();
 				topo.clear()
 				var topoContainer = this.topologyContainer();
 				topoContainer.loadTopology('http://localhost:9090/topology/cloudTopology');
 			},
 			'loadCloudInstanceTopology': function (sender, event) {
+				event.preventDefault();
 				var topo = this.topology();
 				topo.clear()
 				var topoContainer = this.topologyContainer();
 				topoContainer.loadTopology('http://localhost:9090/topology/cloudInstanceTopology');
 			},
 			'loadCloudNetworkTopology': function (sender, event) {
+				event.preventDefault();
 				var topo = this.topology();
 				topo.clear()
 				var topoContainer = this.topologyContainer();
 				topoContainer.loadTopology('http://localhost:9090/topology/cloudNetworkTopology');
 			},
 			'loadCloudInstanceNetworkTopology': function (sender, event) {
+				event.preventDefault();
 				var topo = this.topology();
 				topo.clear()
 				var topoContainer = this.topologyContainer();
 				topoContainer.loadTopology('http://localhost:9090/topology/cloudInstanceNetworkTopology');
 			},
 			'loadCloudInstanceOvsTopology': function (sender, event) {
+				event.preventDefault();
 				var topo = this.topology();
 				topo.clear()
 				var topoContainer = this.topologyContainer();
