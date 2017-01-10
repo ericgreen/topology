@@ -9,7 +9,10 @@
                 this.container(document.getElementById('next-app'));
                 actionBar.assignTopology(topology);
                 actionBar.assignTopologyContainer(topologyContainer);
+                viewBar.assignTopology(topology);
+                viewBar.assignTopologyContainer(topologyContainer);
                 topologyContainer.assignActionBar(actionBar);
+                topologyContainer.assignViewBar(viewBar);
                 actionBar.attach(this);
                 viewBar.attach(this);
                 topology.attach(this);

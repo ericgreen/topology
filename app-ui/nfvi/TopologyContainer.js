@@ -92,22 +92,20 @@
                                         'class': 'n-list-item-i',
                                         role: 'listitem'
                                     },
-                                    content:
-                                        {
-                                            tag: 'a',
-                                            props: {
-                                                'href': '#',
-                                                'addr': '{value}'
-                                            },
-                                            events: {
-                                                'click': '{#openView}'
-                                            },                                            
-                                            content:
-                                                {
-                                                    tag: 'span',
-                                                    content: '{key}',
-                                                }
+                                    content: {
+                                        tag: 'a',
+                                        props: {
+                                            'href': '#',
+                                            'addr': '{value}'
+                                        },
+                                        events: {
+                                            'click': '{#openView}'
+                                        },
+                                        content: {
+                                            tag: 'span',
+                                            content: '{key}',
                                         }
+                                    }
                                 }
                             }
                         }
@@ -229,6 +227,7 @@
 				}
 			},
             actionBar: null,
+            viewBar: null,
         },
         methods: {
             init: function(options) {
@@ -236,6 +235,9 @@
             },
 			assignActionBar: function (actionBar) {
 				this.actionBar(actionBar);
+			},
+			assignViewBar: function (viewBar) {
+				this.viewBar(viewBar);
 			},
             loadTopology: function(topologyUrl) {
                 $.ajax({
@@ -247,6 +249,7 @@
             },
             updateTopology: function(sender, event) {
                 this.actionBar().topologyTitle(this.topologyData().title);
+                this.viewBar().viewItems(this.topologyData().views);
                 this.addGroups(sender, event);
             },
             addGroups: function(sender, event) {

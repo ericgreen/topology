@@ -6,7 +6,6 @@
 			'topologyTitle': {},
 			'exportedData': ''
 		},
-
 		view: {
 			content: [
 				{

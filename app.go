@@ -132,7 +132,7 @@ func CloudTopology(ctx context.Context, rw http.ResponseWriter, r *http.Request)
 
 	viewList := make(map[string]string, 2)
 	viewList["Cloud Instances"] = "http://localhost:9090/topology/cloudInstanceTopology"
-	viewList["Cloud Network"] = "http://localhost:9090/topology/cloudNetworTopology"
+	viewList["Cloud Networks"] = "http://localhost:9090/topology/cloudNetworkTopology"
 
 	cloudTopologyData := TopologyData{
 		Title:    topologyTitle,

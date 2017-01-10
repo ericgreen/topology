@@ -1,39 +1,57 @@
 (function (nx) {
 	nx.define('ViewBar', nx.ui.Component, {
 		properties: {
+			'topology': null,
+			'topologyContainer': null,
+			'viewItems': {
+				set: function (value) {
+					this.view('views').set('items', new nx.data.Dictionary(value));
+				}
+			},
 			'exportedData': ''
 		},
 		view: {
 			content: [
 				{
-                    name: 'list',
+                    name: 'views',
                     tag: 'nav',
-                    props: {
-                        'class': 'w3-sidenav w3-gray'
-                    },
                     style: {
                         'width': '5%',
                     },
-                    content: [
-                        {
-                            content: [
-                                {
-                                    tag: 'a',
-                                    content: 'Cloud Instances'
-                                }
-                            ]
-                        },
-                        {
-                            content: [
-                                {
-                                    tag: 'a',
-                                    content: 'Cloud Instances'
-                                }
-                            ]
-                        }
-                    ]
-                }
+                    props: {
+                        'class': 'w3-sidenav w3-gray',
+						template: {
+							tag: 'a',
+							props: {
+								'addr': '{value}'
+							},
+							content: {
+								tag: 'span',
+								content: '{key}',
+								events: {
+									'click': '{#openView}'
+								},
+							}
+						},
+						items: '{viewItems}'
+					}
+				}
             ]
+		},
+		methods: {
+			'assignTopology': function (topo) {
+				this.topology(topo);
+			},
+			'assignTopologyContainer': function (topoContainer) {
+				this.topologyContainer(topoContainer);
+			},
+            'openView': function(sender, event) {
+                event.preventDefault();
+				var topo = this.topology();
+				topo.clear()
+				var topoContainer = this.topologyContainer();
+				topoContainer.loadTopology($(event.srcElement.parentElement.outerHTML).attr("addr"));
+            },
 		}
 	});
 })(nx);
