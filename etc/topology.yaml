@@ -1,0 +1,48 @@
+---
+service:
+  addr: :9090
+  cors:
+    enabled: true
+    allowed_origins: []
+    allowed_methods: []
+    allow_credentials: true
+  debug:
+    stacks: false
+    stack_size: 8192
+  log:
+    service_log_path: ../logs/service.log
+    service_log_level: debug
+    access_log_path:
+  metrics:
+    enabled: true
+    uri_path: /metrics
+  schema:
+    enabled: true
+    uri_path: /schema
+    file_path: /path/to/schema
+    file_pattern: schema.*
+    root_redirect: false 
+  trace:
+    enabled: true
+    buffer: 100
+    recorder: yaml
+    params:
+      path: ../logs/trace.yaml
+  transport:
+    tls: false
+    cert_file_path:
+    key_file_path:
+  version:
+    min: 1
+    max: 1
+    
+app:
+  path: ../app-ui
+  fallback: /nfvi/index.html
+  
+cloudproviders:
+  providers: [
+    #{"name": "peacock", "auth_url": "http://10.140.88.7:5000/v3", "user": "admin", "password": "spirent", "tenant": "admin", "provider": openstack},
+    {"name": "openstack-west-spirent", "auth_url": "http://10.140.64.103:5000", "user": "admin", "password": "password", "tenant": "admin", "provider": openstack},
+    #{"name": "openstack-calabasas", "auth_url": "http://10.109.225.42:5000", "user": "test", "password": "spirent", "tenant": "CloudStress", "provider": openstack}
+  ]
