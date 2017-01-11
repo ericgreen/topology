@@ -339,7 +339,16 @@ func cloudGetCloudList() []CloudInfo {
 	return clouds
 }
 
-func cloudGetHypervisorList(cloudInfo CloudInfo) []CloudHypervisorInfo {
+func cloudGetClouInfo(cloudName string) *CloudInfo {
+	for _, cloudInfo := range clouds {
+		if cloudInfo.Name == cloudName {
+			return &cloudInfo
+		}
+	}
+	return nil
+}
+
+func cloudGetHypervisorList(cloudInfo *CloudInfo) []CloudHypervisorInfo {
 	if hList, ok := cloudHypervisors[cloudInfo.Name]; ok == true {
 		return hList
 	}
@@ -347,7 +356,7 @@ func cloudGetHypervisorList(cloudInfo CloudInfo) []CloudHypervisorInfo {
 	return hList
 }
 
-func cloudGetIntanceList(cloudInfo CloudInfo) []CloudInstanceInfo {
+func cloudGetIntanceList(cloudInfo *CloudInfo) []CloudInstanceInfo {
 	if iList, ok := cloudInstances[cloudInfo.Name]; ok == true {
 		return iList
 	}
@@ -355,7 +364,7 @@ func cloudGetIntanceList(cloudInfo CloudInfo) []CloudInstanceInfo {
 	return iList
 }
 
-func cloudGetNetworkList(cloudInfo CloudInfo) []CloudNetworkInfo {
+func cloudGetNetworkList(cloudInfo *CloudInfo) []CloudNetworkInfo {
 	if nList, ok := cloudNetworks[cloudInfo.Name]; ok == true {
 		return nList
 	}
@@ -363,7 +372,7 @@ func cloudGetNetworkList(cloudInfo CloudInfo) []CloudNetworkInfo {
 	return nList
 }
 
-func cloudGetNetworkPortList(cloudInfo CloudInfo) []CloudNetworkPortInfo {
+func cloudGetNetworkPortList(cloudInfo *CloudInfo) []CloudNetworkPortInfo {
 	if npList, ok := cloudNetworkPorts[cloudInfo.Name]; ok == true {
 		return npList
 	}
@@ -371,7 +380,7 @@ func cloudGetNetworkPortList(cloudInfo CloudInfo) []CloudNetworkPortInfo {
 	return npList
 }
 
-func resolveInstanceName(cloudInfo CloudInfo, instanceID string) string {
+func resolveInstanceName(cloudInfo *CloudInfo, instanceID string) string {
 	if instanceNames, ok := cloudInstanceNames[cloudInfo.Name]; ok {
 		if instanceName, ok := instanceNames[instanceID]; ok {
 			return instanceName
@@ -380,7 +389,7 @@ func resolveInstanceName(cloudInfo CloudInfo, instanceID string) string {
 	return "unknown"
 }
 
-func resolveNetworkName(cloudInfo CloudInfo, macAddress string) string {
+func resolveNetworkName(cloudInfo *CloudInfo, macAddress string) string {
 	if networkNames, ok := cloudNetworkNames[cloudInfo.Name]; ok {
 		if networkName, ok := networkNames[macAddress]; ok {
 			return networkName

@@ -348,6 +348,7 @@ This Agreement is governed by the laws of the State of New York and the intellec
   position: relative;
   overflow: hidden;
   background: #ffffff;
+  margin-left:10%;
   -webkit-transition: background 0.6s;
   /* For Safari 3.1 to 6.0 */
   transition: background 0.6s;
@@ -703,7 +704,7 @@ This Agreement is governed by the laws of the State of New York and the intellec
 .n-topology.n-topology-blue .n-topology-nav {
   position: absolute;
   top: 0px;
-  left: 8px;
+  left: 50px;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -1039,6 +1040,7 @@ This Agreement is governed by the laws of the State of New York and the intellec
   position: relative;
   overflow: hidden;
   background: #000000;
+  margin-left:10%;
   -webkit-transition: background 0.6s;
   /* For Safari 3.1 to 6.0 */
   transition: background 0.6s;
@@ -1394,7 +1396,7 @@ This Agreement is governed by the laws of the State of New York and the intellec
 .n-topology.n-topology-dark .n-topology-nav {
   position: absolute;
   top: 0px;
-  left: 8px;
+  left: 50px;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -2422,6 +2424,7 @@ This Agreement is governed by the laws of the State of New York and the intellec
   position: relative;
   overflow: hidden;
   background: #223343;
+  margin-left:10%;
   -webkit-transition: background 0.6s;
   /* For Safari 3.1 to 6.0 */
   transition: background 0.6s;
@@ -2777,7 +2780,7 @@ This Agreement is governed by the laws of the State of New York and the intellec
 .n-topology.n-topology-slate .n-topology-nav {
   position: absolute;
   top: 0px;
-  left: 8px;
+  left: 50px;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -3113,6 +3116,7 @@ This Agreement is governed by the laws of the State of New York and the intellec
   position: relative;
   overflow: hidden;
   background: #000000;
+  margin-left:10%;
   -webkit-transition: background 0.6s;
   /* For Safari 3.1 to 6.0 */
   transition: background 0.6s;
@@ -3468,7 +3472,7 @@ This Agreement is governed by the laws of the State of New York and the intellec
 .n-topology.n-topology-yellow .n-topology-nav {
   position: absolute;
   top: 0px;
-  left: 8px;
+  left: 50px;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -3803,7 +3807,7 @@ This Agreement is governed by the laws of the State of New York and the intellec
 .n-topology-tooltip {
   padding: 0px;
   opacity: 0.8 !important;
-  max-height: 500px;
+  max-height: 600px;
 }
 .n-topology-tooltip-header {
   min-width: 160px;
@@ -4568,6 +4572,7 @@ input[type="button"].btn-block {
   max-width: 276px;
   padding: 1px;
   text-align: left;
+  font-size: 12px;
   background-color: #ffffff;
   background-clip: padding-box;
   border: 1px solid #cccccc;

@@ -41,90 +41,25 @@
 									props: {
 										'href': '#'
 									},
-									content: 'Cloud Topology'
+									content: 'Clouds'
 								}
 							],
 							events: {
-								'click': '{#loadCloudTopology}'
-							}
-						},
-						{
-							tag: 'li',
-							content: [
-								{
-									tag: 'a',
-									props: {
-										'href': '#'
-									},
-									content: 'Cloud Instances'
-								}
-							],
-							events: {
-								'click': '{#loadCloudInstanceTopology}'
-							}
-						},
-						{
-							tag: 'li',
-							content: [
-								{
-									tag: 'a',
-									props: {
-										'href': '#'
-									},
-									content: 'Cloud Networks'
-								}
-							],
-							events: {
-								'click': '{#loadCloudNetworkTopology}'
-							}
-						},
-						{
-							tag: 'li',
-							content: [
-								{
-									tag: 'a',
-									props: {
-										'href': '#'
-									},
-									content: 'Cloud Instance Networks'
-								}
-							],
-							events: {
-								'click': '{#loadCloudInstanceNetworkTopology}'
-							}
-						},
-						{
-							tag: 'li',
-							content: [
-								{
-									tag: 'a',
-									props: {
-										'href': '#'
-									},
-									content: 'Cloud Instance OVS Networks'
-								}
-							],
-							events: {
-								'click': '{#loadCloudInstanceOvsTopology}'
+								'click': '{#loadCloudsTopology}'
 							}
 						},
 					]
 				},
-				/*
-				{
-					tag: 'h2',
-					content: '{#topologyTitle}',
-					props: {
-						style : {
-							'text-align': 'center',
-							'margin-left' : '10%'
-						}
-					}
-				},
-				*/
 			]
 		},
 		methods: {
+			'loadCloudsTopology': function (sender, event) {
+				event.preventDefault();
+				var topo = this.topology();
+				topo.clear()
+				var topoContainer = this.topologyContainer();
+				topoContainer.loadTopology('http://localhost:9090/topology/cloudsTopology');
+			},
 			'loadCloudTopology': function (sender, event) {
 				event.preventDefault();
 				var topo = this.topology();

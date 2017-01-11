@@ -46,19 +46,21 @@ var ovsBridges map[string][]OvsBridge = make(map[string][]OvsBridge)
 var ovsPorts map[string][]OvsPort = make(map[string][]OvsPort)
 var ovsInterfaces map[string][]OvsInterface = make(map[string][]OvsInterface)
 
-func ovsConnect(cloudInfo CloudInfo, ipAddress string) (*OvsConnection, error) {
+func ovsConnect(cloudInfo CloudInfo, ipAddress string, port int) (*OvsConnection, error) {
 	logFields := log.Fields{
 		"Name":      cloudInfo.Name,
 		"IpAddress": ipAddress,
+		"Port":      port,
 	}
 
 	service.Logger().WithFields(logFields).Info("Establishing ovsdb connection")
 
-	c, err := libovsdb.Connect(ipAddress, 6640)
+	c, err := libovsdb.Connect(ipAddress, port)
 	if err != nil {
 		logFields = log.Fields{
 			"Name":      cloudInfo.Name,
 			"IpAddress": ipAddress,
+			"Port":      port,
 			"Error":     err.Error(),
 		}
 		service.Logger().WithFields(logFields).Info("ovsdb connection failed")
@@ -329,33 +331,50 @@ func ovsGetBridgeConnections(ipAddress string) []OvsBridgeConnection {
 	return bridgeConnections
 }
 
-func ovsGetBridgeConnection(ipAddress string, macAddress string) OvsBridgeConnection {
+func ovsGetBridgeConnection(ipAddress string, macAddress string) *OvsBridgeConnection {
 	var bridgeConnection OvsBridgeConnection
 	interfaceList := ovsGetInterfaces(ipAddress)
 	portList := ovsGetPorts(ipAddress)
 	bridgeList := ovsGetBridges(ipAddress)
+	found := false
 	for _, iface := range interfaceList {
 		if iface.ExternalIDs["attached-mac"] == macAddress {
 			bridgeConnection.TargetInterface = iface
+			found = true
 			break
 		}
 	}
+	if !found {
+		return nil
+	}
 
+	found = false
 	for _, port := range portList {
 		if bridgeConnection.TargetInterface.Name == port.Name {
 			bridgeConnection.TargetPort = port
+			found = true
 			break
 		}
 	}
 
+	if !found {
+		return nil
+	}
+
+	found = false
 	for _, bridge := range bridgeList {
 		for _, portUUID := range bridge.PortUUIDs {
 			if bridgeConnection.TargetPort.UUID == portUUID {
 				bridgeConnection.TargetBridge = bridge
+				found = true
 				break
 			}
 		}
 	}
 
-	return bridgeConnection
+	if !found {
+		return nil
+	}
+
+	return &bridgeConnection
 }

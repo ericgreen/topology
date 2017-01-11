@@ -16,7 +16,7 @@
                 actionBar.attach(this);
                 viewBar.attach(this);
                 topology.attach(this);
-                topologyContainer.loadTopology('http://localhost:9090/topology/cloudTopology');
+                topologyContainer.loadTopology('http://localhost:9090/topology/cloudsTopology');
             }
         }
     });

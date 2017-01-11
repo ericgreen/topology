@@ -155,7 +155,7 @@ func (c *LibvirtConnection) libvirtLoadDomainInfo(domain libvirt.VirDomain) (*Li
 	instance := LibvirtDomainInstance{
 		UUID:         uuid,
 		Name:         name,
-		InstanceName: resolveInstanceName(c.cloudInfo, uuid),
+		InstanceName: resolveInstanceName(&c.cloudInfo, uuid),
 		Interfaces:   interfaces,
 	}
 
@@ -198,7 +198,7 @@ func (c *LibvirtConnection) libvirtLoadDomainInterfaceInfo(domain libvirt.VirDom
 			DevName:     devName,
 			BridgeName:  bridgeName,
 			MacAddress:  macAddr,
-			NetworkName: resolveNetworkName(c.cloudInfo, macAddr),
+			NetworkName: resolveNetworkName(&c.cloudInfo, macAddr),
 			RxBytes:     stats.RxBytes,
 			RxPackets:   stats.RxPackets,
 			RxErrs:      stats.RxErrs,

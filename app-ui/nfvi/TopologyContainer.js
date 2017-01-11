@@ -1,3 +1,6 @@
+
+var $topologyContainer;
+
 (function(nx, global) {
     nx.define('TopologyContainerNodeTooltipContent', nx.ui.Component, {
         properties: {
@@ -6,6 +9,7 @@
                     var model = value.model();
                     this.view('list').set('items', new nx.data.Dictionary(model.getData().props));
                     this.view('views').set('items', new nx.data.Dictionary(model.getData().views));
+                    this.topology = value.topology();
                     this.title(value.label());
                 }
             },
@@ -120,7 +124,8 @@
             },
             openView: function(sender, event) {
                 event.preventDefault();
-                alert($(event.srcElement.parentElement.parentElement.innerHTML).attr("addr"));
+                var url = $(event.srcElement.parentElement.parentElement.innerHTML).attr("addr");
+                $topologyContainer.loadTopology(url);
             },
         }
     });
@@ -130,8 +135,6 @@
                 set: function (value) {
                     var model = value.model();
                     var items = new nx.data.Dictionary(model.getData().props);
-                    items.setItem("source", model.getData().source);
-                    items.setItem("target", model.getData().target);
                     this.view('list').set('items', items);
                 }
             },
@@ -232,6 +235,7 @@
         methods: {
             init: function(options) {
                 this.inherited(options);
+                $topologyContainer = this;
             },
 			assignActionBar: function (actionBar) {
 				this.actionBar(actionBar);

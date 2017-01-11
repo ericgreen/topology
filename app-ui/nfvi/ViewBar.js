@@ -28,9 +28,9 @@
 							content: {
 								tag: 'span',
 								content: '{key}',
-								events: {
-									'click': '{#openView}'
-								},
+							},
+							events: {
+								'click': '{#openView}'
 							}
 						},
 						items: '{viewItems}'
@@ -50,7 +50,9 @@
 				var topo = this.topology();
 				topo.clear()
 				var topoContainer = this.topologyContainer();
-				topoContainer.loadTopology($(event.srcElement.parentElement.outerHTML).attr("addr"));
+				url = ($(event.srcElement.parentElement.outerHTML).attr("addr"));
+                //url = $(event.srcElement.parentElement.innerHTML).attr('addr')
+				topoContainer.loadTopology(url);
             },
 		}
 	});
