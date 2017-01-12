@@ -38,7 +38,7 @@ func discover() error {
 			if err != nil {
 				oc, err = ovsConnect(cloudInfo, hypervisor.HostIP, 6641)
 				if err != nil {
-					return err
+					//return err
 					continue
 				}
 			}

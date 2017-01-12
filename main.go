@@ -45,10 +45,13 @@ func main() {
 
 	InitApp(service.Router())
 
+	go discover()
+	/*
 	if err := discover(); err != nil {
 		fmt.Println("Discovery error:", err.Error())
 		panic(err)
 	}
+	*/
 
 	go func() {
 		service.Logger().Info("Starting to listen on " + cfg.Service.Addr)

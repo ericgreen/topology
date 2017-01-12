@@ -50,6 +50,11 @@ func CloudsTopology(ctx context.Context, rw http.ResponseWriter, r *http.Request
 		cloudProps["provider"] = cloudInfo.Provider
 		cloudViews := make(map[string]string)
 		cloudViews["Cloud Topology"] = "http://localhost:9090/topology/cloudTopology/" + cloudInfo.Name
+		cloudViews["Cloud Hypervisors"] = "http://localhost:9090/topology/cloudHypervisorTopology/" + cloudInfo.Name
+		cloudViews["Cloud Networks"] = "http://localhost:9090/topology/cloudLayer3NetworkTopology/" + cloudInfo.Name
+		cloudViews["Cloud Linux Bridges"] = "http://localhost:9090/topology/cloudLayer2NetworkTopology/" + cloudInfo.Name
+		cloudViews["Cloud OVS Bridges"] = "http://localhost:9090/topology/cloudOvsNetworkTopology/" + cloudInfo.Name
+
 		cloudNodeId := nodeId
 		cloudNode := TopologyNode{
 			ID:         cloudNodeId,
@@ -131,7 +136,7 @@ func CloudTopology(ctx context.Context, rw http.ResponseWriter, r *http.Request)
 			DeviceType: "host",
 			X:          200,
 			Y:          (200 + (5 * i)),
-			Color:      "#000000",
+			Color:      "#9C27B0",
 			Props:      hypervisorNodeProps,
 			Views:      hypervisorNodeViews,
 		}
@@ -164,7 +169,7 @@ func CloudTopology(ctx context.Context, rw http.ResponseWriter, r *http.Request)
 			DeviceType: "router",
 			X:          400,
 			Y:          (200 + (5 * i)),
-			Color:      "#CCFF00",
+			Color:      "#888888",
 			Props:      networkNodeProps,
 			Views:      networkNodeViews,
 		}
@@ -237,7 +242,7 @@ func CloudHypervisorTopology(ctx context.Context, rw http.ResponseWriter, r *htt
 			DeviceType: "host",
 			//X:          200,
 			//Y:          (200 + (5 * i)),
-			Color: "#000000",
+			Color: "#9C27B0",
 			Props: hypervisorNodeProps,
 			Views: hypervisorNodeViews,
 		}
@@ -250,6 +255,7 @@ func CloudHypervisorTopology(ctx context.Context, rw http.ResponseWriter, r *htt
 			instanceNodeProps["uuid"] = instance.UUID
 			instanceNodeProps["name"] = instance.Name
 			instanceNodeViews := make(map[string]string)
+			instanceNodeViews["Networks"] = "http://localhost:9090/topology/cloudInstanceLayer3NetworkTopology/" + cloudName + "/" + hypervisor.Name + "/" + instance.InstanceName
 			instanceNodeViews["Linux Bridges"] = "http://localhost:9090/topology/cloudInstanceLayer2NetworkTopology/" + cloudName + "/" + hypervisor.Name + "/" + instance.InstanceName
 			instanceNodeViews["OVS Bridges"] = "http://localhost:9090/topology/cloudInstanceOvsNetworkTopology/" + cloudName + "/" + hypervisor.Name + "/" + instance.InstanceName
 
@@ -324,7 +330,7 @@ func CloudLayer3NetworkTopology(ctx context.Context, rw http.ResponseWriter, r *
 	cloudName := httprouter.ContextParams(ctx).ByName("cloud_name")
 	cloudInfo := cloudGetCloudInfo(cloudName)
 
-	topologyTitle := cloudInfo.Name + " VNF Layer3 Network Topology"
+	topologyTitle := cloudInfo.Name + " VNF Layer-3 Network Topology"
 
 	hypervisorList := cloudGetHypervisorList(cloudInfo)
 	networkList := cloudGetNetworkList(cloudInfo)
@@ -347,7 +353,7 @@ func CloudLayer3NetworkTopology(ctx context.Context, rw http.ResponseWriter, r *
 			DeviceType: "router",
 			X:          400,
 			Y:          (200 + (5 * i)),
-			Color:      "#CCFF00",
+			Color:      "#888888",
 			Props:      networkNodeProps,
 			Views:      networkNodeViews,
 		}
@@ -362,6 +368,7 @@ func CloudLayer3NetworkTopology(ctx context.Context, rw http.ResponseWriter, r *
 			instanceNodeProps["uuid"] = instance.UUID
 			instanceNodeProps["name"] = instance.Name
 			instanceNodeViews := make(map[string]string)
+			instanceNodeViews["Networks"] = "http://localhost:9090/topology/cloudInstanceLayer3NetworkTopology/" + cloudName + "/" + hypervisor.Name + "/" + instance.InstanceName
 			instanceNodeViews["Linux Bridges"] = "http://localhost:9090/topology/cloudInstanceLayer2NetworkTopology/" + cloudName + "/" + hypervisor.Name + "/" + instance.InstanceName
 			instanceNodeViews["OVS Bridges"] = "http://localhost:9090/topology/cloudInstanceOvsNetworkTopology/" + cloudName + "/" + hypervisor.Name + "/" + instance.InstanceName
 			instanceNodeId := nodeId
@@ -425,7 +432,7 @@ func CloudLayer2NetworkTopology(ctx context.Context, rw http.ResponseWriter, r *
 	cloudName := httprouter.ContextParams(ctx).ByName("cloud_name")
 	cloudInfo := cloudGetCloudInfo(cloudName)
 
-	topologyTitle := cloudInfo.Name + " VNF Layer2 Network Topology"
+	topologyTitle := cloudInfo.Name + " VNF Layer-2 Network Topology"
 
 	hypervisorList := cloudGetHypervisorList(cloudInfo)
 
@@ -452,7 +459,7 @@ func CloudLayer2NetworkTopology(ctx context.Context, rw http.ResponseWriter, r *
 			DeviceType: "host",
 			X:          200,
 			Y:          (200 + (5 * i)),
-			Color:      "#000000",
+			Color:      "#9C27B0",
 			Props:      hypervisorNodeProps,
 			Views:      hypervisorNodeViews,
 		}
@@ -464,6 +471,7 @@ func CloudLayer2NetworkTopology(ctx context.Context, rw http.ResponseWriter, r *
 			instanceNodeProps["uuid"] = instance.UUID
 			instanceNodeProps["name"] = instance.Name
 			instanceNodeViews := make(map[string]string)
+			instanceNodeViews["Networks"] = "http://localhost:9090/topology/cloudInstanceLayer3NetworkTopology/" + cloudName + "/" + hypervisor.Name + "/" + instance.InstanceName
 			instanceNodeViews["Linux Bridges"] = "http://localhost:9090/topology/cloudInstanceLayer2NetworkTopology/" + cloudName + "/" + hypervisor.Name + "/" + instance.InstanceName
 			instanceNodeViews["OVS Bridges"] = "http://localhost:9090/topology/cloudInstanceOvsNetworkTopology/" + cloudName + "/" + hypervisor.Name + "/" + instance.InstanceName
 			instanceNodeId := nodeId
@@ -671,6 +679,7 @@ func CloudOvsNetwoprkTopology(ctx context.Context, rw http.ResponseWriter, r *ht
 			instanceNodeProps["uuid"] = instance.UUID
 			instanceNodeProps["name"] = instance.Name
 			instanceNodeViews := make(map[string]string)
+			instanceNodeViews["Networks"] = "http://localhost:9090/topology/cloudInstanceLayer3NetworkTopology/" + cloudName + "/" + hypervisor.Name + "/" + instance.InstanceName
 			instanceNodeViews["Linux Bridges"] = "http://localhost:9090/topology/cloudInstanceLayer2NetworkTopology/" + cloudName + "/" + hypervisor.Name + "/" + instance.InstanceName
 			instanceNodeViews["OVS Bridges"] = "http://localhost:9090/topology/cloudInstanceOvsNetworkTopology/" + cloudName + "/" + hypervisor.Name + "/" + instance.InstanceName
 			instanceNodeId := nodeId
@@ -838,7 +847,7 @@ func CloudHypervisorInstancesTopology(ctx context.Context, rw http.ResponseWrite
 		DeviceType: "host",
 		//X:          200,
 		//Y:          (200 + (5 * i)),
-		Color: "#000000",
+		Color: "#9C27B0",
 		Props: hypervisorNodeProps,
 	}
 	nodeList = append(nodeList, hypervisorNode)
@@ -850,6 +859,7 @@ func CloudHypervisorInstancesTopology(ctx context.Context, rw http.ResponseWrite
 		instanceNodeProps["uuid"] = instance.UUID
 		instanceNodeProps["name"] = instance.Name
 		instanceNodeViews := make(map[string]string)
+		instanceNodeViews["Networks"] = "http://localhost:9090/topology/cloudInstanceLayer3NetworkTopology/" + cloudName + "/" + hypervisor.Name + "/" + instance.InstanceName
 		instanceNodeViews["Linux Bridges"] = "http://localhost:9090/topology/cloudInstanceLayer2NetworkTopology/" + cloudName + "/" + hypervisorName + "/" + instance.InstanceName
 		instanceNodeViews["OVS Bridges"] = "http://localhost:9090/topology/cloudInstanceOvsNetworkTopology/" + cloudName + "/" + hypervisorName + "/" + instance.InstanceName
 		instanceNode := TopologyNode{
@@ -922,7 +932,7 @@ func CloudHypervisorLayer3NetworkTopology(ctx context.Context, rw http.ResponseW
 	networkName := httprouter.ContextParams(ctx).ByName("network_name")
 	network := cloudGetNetworkInfo(cloudName, networkName)
 
-	topologyTitle := cloudName + " - " + networkName + " VNF Layer3 Network Topology"
+	topologyTitle := cloudName + " - " + networkName + " VNF Layer-3 Network Topology"
 
 	hypervisorList := cloudGetHypervisorList(cloudInfo)
 
@@ -941,7 +951,7 @@ func CloudHypervisorLayer3NetworkTopology(ctx context.Context, rw http.ResponseW
 		DeviceType: "router",
 		//X:          400,
 		//Y:          (200 + (5 * i)),
-		Color: "#CCFF00",
+		Color: "#888888",
 		Props: networkNodeProps,
 		Views: networkNodeViews,
 	}
@@ -958,6 +968,7 @@ func CloudHypervisorLayer3NetworkTopology(ctx context.Context, rw http.ResponseW
 						instanceNodeProps["uuid"] = instance.UUID
 						instanceNodeProps["name"] = instance.Name
 						instanceNodeViews := make(map[string]string)
+						instanceNodeViews["Networks"] = "http://localhost:9090/topology/cloudInstanceLayer3NetworkTopology/" + cloudName + "/" + hypervisor.Name + "/" + instance.InstanceName
 						instanceNodeViews["Linux Bridges"] = "http://localhost:9090/topology/cloudInstanceLayer2NetworkTopology/" + cloudName + "/" + hypervisor.Name + "/" + instance.InstanceName
 						instanceNodeViews["OVS Bridges"] = "http://localhost:9090/topology/cloudInstanceOvsNetworkTopology/" + cloudName + "/" + hypervisor.Name + "/" + instance.InstanceName
 						instanceNodeId := nodeId
@@ -1014,7 +1025,7 @@ func CloudHypervisorLayer2NetworkTopology(ctx context.Context, rw http.ResponseW
 	hypervisorName := httprouter.ContextParams(ctx).ByName("hypervisor_name")
 	hypervisor := cloudGetHypervisorInfo(cloudName, hypervisorName)
 
-	topologyTitle := cloudName + " - " + hypervisorName + " VNF Layer2 Network Topology"
+	topologyTitle := cloudName + " - " + hypervisorName + " VNF Layer-2 Network Topology"
 
 	var nodeList []TopologyNode
 	var linkList []TopologyLink
@@ -1037,7 +1048,7 @@ func CloudHypervisorLayer2NetworkTopology(ctx context.Context, rw http.ResponseW
 		DeviceType: "host",
 		//X:          200,
 		//Y:          (200 + (5 * i)),
-		Color: "#000000",
+		Color: "#9C27B0",
 		Props: hypervisorNodeProps,
 		Views: hypervisorNodeViews,
 	}
@@ -1049,6 +1060,7 @@ func CloudHypervisorLayer2NetworkTopology(ctx context.Context, rw http.ResponseW
 		instanceNodeProps["uuid"] = instance.UUID
 		instanceNodeProps["name"] = instance.Name
 		instanceNodeViews := make(map[string]string)
+		instanceNodeViews["Networks"] = "http://localhost:9090/topology/cloudInstanceLayer3NetworkTopology/" + cloudName + "/" + hypervisor.Name + "/" + instance.InstanceName
 		instanceNodeViews["Linux Bridges"] = "http://localhost:9090/topology/cloudInstanceLayer2NetworkTopology/" + cloudName + "/" + hypervisorName + "/" + instance.InstanceName
 		instanceNodeViews["OVS Bridges"] = "http://localhost:9090/topology/cloudInstanceOvsNetworkTopology/" + cloudName + "/" + hypervisorName + "/" + instance.InstanceName
 		instanceNodeId := nodeId
@@ -1235,6 +1247,7 @@ func CloudHypervisorOvsNetworkTopology(ctx context.Context, rw http.ResponseWrit
 		instanceNodeProps["uuid"] = instance.UUID
 		instanceNodeProps["name"] = instance.Name
 		instanceNodeViews := make(map[string]string)
+		instanceNodeViews["Networks"] = "http://localhost:9090/topology/cloudInstanceLayer3NetworkTopology/" + cloudName + "/" + hypervisor.Name + "/" + instance.InstanceName
 		instanceNodeViews["Linux Bridges"] = "http://localhost:9090/topology/cloudInstanceLayer2NetworkTopology/" + cloudName + "/" + hypervisor.Name + "/" + instance.InstanceName
 		instanceNodeViews["OVS Bridges"] = "http://localhost:9090/topology/cloudInstanceOvsNetworkTopology/" + cloudName + "/" + hypervisor.Name + "/" + instance.InstanceName
 		instanceNodeId := nodeId
@@ -1374,6 +1387,102 @@ func CloudHypervisorOvsNetworkTopology(ctx context.Context, rw http.ResponseWrit
 	luddite.WriteResponse(rw, http.StatusOK, cloudTopologyData)
 }
 
+func CloudInstanceLayer3NetworkTopology(ctx context.Context, rw http.ResponseWriter, r *http.Request) {
+
+	cloudName := httprouter.ContextParams(ctx).ByName("cloud_name")
+	cloudInfo := cloudGetCloudInfo(cloudName)
+	hypervisorName := httprouter.ContextParams(ctx).ByName("hypervisor_name")
+	hypervisor := cloudGetHypervisorInfo(cloudName, hypervisorName)
+	instanceName := httprouter.ContextParams(ctx).ByName("instance_name")
+	instance := libvirtGetDomainInstance(hypervisor.HostIP, instanceName)
+
+	networkList := cloudGetNetworkList(cloudInfo)
+
+	topologyTitle := cloudName + " - " + hypervisorName + " - " + instanceName + " VNF Layer-3 Network Topology"
+
+	var nodeList []TopologyNode
+	var linkList []TopologyLink
+	var nodeSetList []TopologyNodeSet
+	nodeId := 0
+	linkId := 0
+
+	instanceNodeProps := make(map[string]interface{})
+	instanceNodeProps["uuid"] = instance.UUID
+	instanceNodeProps["name"] = instance.Name
+	instanceNodeViews := make(map[string]string)
+	instanceNodeViews["Networks"] = "http://localhost:9090/topology/cloudInstanceLayer3NetworkTopology/" + cloudName + "/" + hypervisor.Name + "/" + instance.InstanceName
+	instanceNodeViews["Linux Bridges"] = "http://localhost:9090/topology/cloudInstanceLayer2NetworkTopology/" + cloudName + "/" + hypervisor.Name + "/" + instance.InstanceName
+	instanceNodeViews["OVS Bridges"] = "http://localhost:9090/topology/cloudInstanceOvsNetworkTopology/" + cloudName + "/" + hypervisor.Name + "/" + instance.InstanceName
+	instanceNodeId := nodeId
+	instanceNode := TopologyNode{
+		ID:         nodeId,
+		Name:       instance.InstanceName,
+		DeviceType: "server",
+		//X:          300,
+		//Y:          (200 + (5 * j)),
+		Color: "#0000FF",
+		Props: instanceNodeProps,
+		Views: instanceNodeViews,
+	}
+	nodeList = append(nodeList, instanceNode)
+	nodeId++
+
+
+	for _, iface := range instance.Interfaces {
+		for _, network := range networkList {
+			if network.Name == iface.NetworkName {
+				networkNodeProps := make(map[string]interface{})
+				networkNodeViews := make(map[string]string)
+				networkNodeProps["id"] = network.ID
+				networkNodeId := nodeId
+				networkNode := TopologyNode{
+					ID:         nodeId,
+					Name:       network.Name,
+					DeviceType: "router",
+					//X:          400,
+					//Y:          (200 + (5 * i)),
+					Color: "#888888",
+					Props: networkNodeProps,
+					Views: networkNodeViews,
+				}
+				nodeList = append(nodeList, networkNode)
+				nodeId++
+
+				networkLinkProps := make(map[string]interface{})
+				networkLinkProps["source_name"] = networkNode.Name
+				networkLinkProps["target_name"] = instanceNode.Name
+				networkLink := TopologyLink{
+					Name:   "",
+					Source: instanceNodeId,
+					Target: networkNodeId,
+					Color:  "#0000FF",
+					Props:  networkLinkProps,
+				}
+				linkList = append(linkList, networkLink)
+				linkId++
+				break
+			}
+		}
+	}
+
+	groupList := make([]TopologyGroup, 0)
+
+	viewList := make(map[string]string, 2)
+	viewList["Networks"] = "http://localhost:9090/topology/cloudInstanceLayer3NetworkTopology/" + cloudName + "/" + hypervisor.Name + "/" + instance.InstanceName
+	viewList["Linux Bridges"] = "http://localhost:9090/topology/cloudInstanceLayer2NetworkTopology/" + cloudName + "/" + hypervisor.Name + "/" + instance.InstanceName
+	viewList["OVS Bridges"] = "http://localhost:9090/topology/cloudInstanceOvsNetworkTopology/" + cloudName + "/" + hypervisor.Name + "/" + instance.InstanceName
+	cloudTopologyData := TopologyData{
+		Title:    topologyTitle,
+		Nodes:    nodeList,
+		Links:    linkList,
+		NodeSets: nodeSetList,
+		Groups:   groupList,
+		Views:    viewList,
+	}
+
+	luddite.WriteResponse(rw, http.StatusOK, cloudTopologyData)
+}
+
 func CloudInstanceLayer2NetworkTopology(ctx context.Context, rw http.ResponseWriter, r *http.Request) {
 
 	cloudName := httprouter.ContextParams(ctx).ByName("cloud_name")
@@ -1382,7 +1491,7 @@ func CloudInstanceLayer2NetworkTopology(ctx context.Context, rw http.ResponseWri
 	instanceName := httprouter.ContextParams(ctx).ByName("instance_name")
 	instance := libvirtGetDomainInstance(hypervisor.HostIP, instanceName)
 
-	topologyTitle := cloudName + " - " + hypervisorName + " - " + instanceName + " VNF Layer2 Network Topology"
+	topologyTitle := cloudName + " - " + hypervisorName + " - " + instanceName + " VNF Layer-2 Network Topology"
 
 	var nodeList []TopologyNode
 	var linkList []TopologyLink
@@ -1405,7 +1514,7 @@ func CloudInstanceLayer2NetworkTopology(ctx context.Context, rw http.ResponseWri
 		DeviceType: "host",
 		//X:          200,
 		//Y:          (200 + (5 * i)),
-		Color: "#000000",
+		Color: "#9C27B0",
 		Props: hypervisorNodeProps,
 		Views: hypervisorNodeViews,
 	}
@@ -1416,6 +1525,7 @@ func CloudInstanceLayer2NetworkTopology(ctx context.Context, rw http.ResponseWri
 	instanceNodeProps["uuid"] = instance.UUID
 	instanceNodeProps["name"] = instance.Name
 	instanceNodeViews := make(map[string]string)
+	instanceNodeViews["Networks"] = "http://localhost:9090/topology/cloudInstanceLayer3NetworkTopology/" + cloudName + "/" + hypervisor.Name + "/" + instance.InstanceName
 	instanceNodeViews["Linux Bridges"] = "http://localhost:9090/topology/cloudInstanceLayer2NetworkTopology/" + cloudName + "/" + hypervisorName + "/" + instanceName
 	instanceNodeViews["OVS Bridges"] = "http://localhost:9090/topology/cloudInstanceOvsNetworkTopology/" + cloudName + "/" + hypervisorName + "/" + instanceName
 	instanceNodeId := nodeId
@@ -1455,7 +1565,7 @@ func CloudInstanceLayer2NetworkTopology(ctx context.Context, rw http.ResponseWri
 			DeviceType: "cloud",
 			X:          200,
 			Y:          (200 + (5 * k)),
-			Color:      "#0000FF",
+			Color:      "#FF00FF",
 			Props:      bridgeNodeProps,
 		}
 		nodeList = append(nodeList, bridgeNode)
@@ -1486,6 +1596,7 @@ func CloudInstanceLayer2NetworkTopology(ctx context.Context, rw http.ResponseWri
 	groupList := make([]TopologyGroup, 0)
 
 	viewList := make(map[string]string)
+	viewList["Networks"] = "http://localhost:9090/topology/cloudInstanceLayer3NetworkTopology/" + cloudName + "/" + hypervisor.Name + "/" + instance.InstanceName
 	viewList["Linux Bridges"] = "http://localhost:9090/topology/cloudInstanceLayer2NetworkTopology/" + cloudName + "/" + hypervisorName + "/" + instanceName
 	viewList["OVS Bridges"] = "http://localhost:9090/topology/cloudInstanceOvsNetworkTopology/" + cloudName + "/" + hypervisorName + "/" + instanceName
 
@@ -1578,6 +1689,7 @@ func CloudInstanceOvsNetworkTopology(ctx context.Context, rw http.ResponseWriter
 	instanceNodeProps["uuid"] = instance.UUID
 	instanceNodeProps["name"] = instance.Name
 	instanceNodeViews := make(map[string]string)
+	instanceNodeViews["Networks"] = "http://localhost:9090/topology/cloudInstanceLayer3NetworkTopology/" + cloudName + "/" + hypervisor.Name + "/" + instance.InstanceName
 	instanceNodeViews["Linux Bridges"] = "http://localhost:9090/topology/cloudInstanceLayer2NetworkTopology/" + cloudName + "/" + hypervisorName + "/" + instanceName
 	instanceNodeViews["OVS Bridges"] = "http://localhost:9090/topology/cloudInstanceOvsNetworkTopology/" + cloudName + "/" + hypervisorName + "/" + instanceName
 	instanceNodeId := nodeId
@@ -1666,6 +1778,7 @@ func CloudInstanceOvsNetworkTopology(ctx context.Context, rw http.ResponseWriter
 	groupList := make([]TopologyGroup, 0)
 
 	viewList := make(map[string]string)
+	viewList["Networks"] = "http://localhost:9090/topology/cloudInstanceLayer3NetworkTopology/" + cloudName + "/" + hypervisor.Name + "/" + instance.InstanceName
 	viewList["Linux Bridges"] = "http://localhost:9090/topology/cloudInstanceLayer2NetworkTopology/" + cloudName + "/" + hypervisorName + "/" + instanceName
 	viewList["OVS Bridges"] = "http://localhost:9090/topology/cloudInstanceOvsNetworkTopology/" + cloudName + "/" + hypervisorName + "/" + instanceName
 
@@ -1698,6 +1811,7 @@ func InitApp(router *httprouter.Router) {
 	router.GET("/topology/cloudHypervisorLayer3NetworkTopology/:cloud_name/:network_name", CloudHypervisorLayer3NetworkTopology)
 	router.GET("/topology/cloudHypervisorLayer2NetworkTopology/:cloud_name/:hypervisor_name", CloudHypervisorLayer2NetworkTopology)
 	router.GET("/topology/cloudHypervisorOvsNetworkTopology/:cloud_name/:hypervisor_name", CloudHypervisorOvsNetworkTopology)
+	router.GET("/topology/cloudInstanceLayer3NetworkTopology/:cloud_name/:hypervisor_name/:instance_name", CloudInstanceLayer3NetworkTopology)
 	router.GET("/topology/cloudInstanceLayer2NetworkTopology/:cloud_name/:hypervisor_name/:instance_name", CloudInstanceLayer2NetworkTopology)
 	router.GET("/topology/cloudInstanceOvsNetworkTopology/:cloud_name/:hypervisor_name/:instance_name", CloudInstanceOvsNetworkTopology)
 }
