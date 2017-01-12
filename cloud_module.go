@@ -63,6 +63,7 @@ var cloudInstances map[string][]CloudInstanceInfo = make(map[string][]CloudInsta
 var cloudNetworks map[string][]CloudNetworkInfo = make(map[string][]CloudNetworkInfo)
 var cloudNetworkPorts map[string][]CloudNetworkPortInfo = make(map[string][]CloudNetworkPortInfo)
 
+var cloudHypervisorNames map[string]map[string]string = make(map[string]map[string]string)
 var cloudInstanceNames map[string]map[string]string = make(map[string]map[string]string)
 var cloudNetworkNames map[string]map[string]string = make(map[string]map[string]string)
 
@@ -144,6 +145,13 @@ func cloudLoadHypervisors(cloudInfo CloudInfo) error {
 	json.Unmarshal([]byte(output), &hypervisors)
 
 	cloudHypervisors[cloudInfo.Name] = hypervisors.Hypervisors
+
+	hypervisorNames := make(map[string]string, len(hypervisors.Hypervisors))
+	for _, hypervisor := range hypervisors.Hypervisors {
+		hypervisorNames[hypervisor.HostIP] = hypervisor.Name
+	}
+
+	cloudHypervisorNames[cloudInfo.Name] = hypervisorNames
 
 	service.Logger().WithFields(logFields).Info("Sucessfully loaded hypervisor list")
 
@@ -339,7 +347,7 @@ func cloudGetCloudList() []CloudInfo {
 	return clouds
 }
 
-func cloudGetClouInfo(cloudName string) *CloudInfo {
+func cloudGetCloudInfo(cloudName string) *CloudInfo {
 	for _, cloudInfo := range clouds {
 		if cloudInfo.Name == cloudName {
 			return &cloudInfo
@@ -356,12 +364,40 @@ func cloudGetHypervisorList(cloudInfo *CloudInfo) []CloudHypervisorInfo {
 	return hList
 }
 
+func cloudGetHypervisorInfo(cloudName string, hypervisorName string) *CloudHypervisorInfo {
+	cloudInfo := cloudGetCloudInfo(cloudName)
+	if cloudInfo != nil {
+		if hList, ok := cloudHypervisors[cloudInfo.Name]; ok == true {
+			for _, hypervisorInfo := range hList {
+				if hypervisorInfo.Name == hypervisorName {
+					return &hypervisorInfo
+				}
+			}
+		}
+	}
+	return nil
+}
+
 func cloudGetIntanceList(cloudInfo *CloudInfo) []CloudInstanceInfo {
 	if iList, ok := cloudInstances[cloudInfo.Name]; ok == true {
 		return iList
 	}
 	var iList []CloudInstanceInfo
 	return iList
+}
+
+func cloudGetInstanceInfo(cloudName string, instanceName string) *CloudInstanceInfo {
+	cloudInfo := cloudGetCloudInfo(cloudName)
+	if cloudInfo != nil {
+		if hList, ok := cloudInstances[cloudInfo.Name]; ok == true {
+			for _, instanceInfo := range hList {
+				if instanceInfo.Name == instanceName {
+					return &instanceInfo
+				}
+			}
+		}
+	}
+	return nil
 }
 
 func cloudGetNetworkList(cloudInfo *CloudInfo) []CloudNetworkInfo {
@@ -372,12 +408,35 @@ func cloudGetNetworkList(cloudInfo *CloudInfo) []CloudNetworkInfo {
 	return nList
 }
 
+func cloudGetNetworkInfo(cloudName string, networkName string) *CloudNetworkInfo {
+	cloudInfo := cloudGetCloudInfo(cloudName)
+	if cloudInfo != nil {
+		if nList, ok := cloudNetworks[cloudInfo.Name]; ok == true {
+			for _, networkInfo := range nList {
+				if networkInfo.Name == networkName {
+					return &networkInfo
+				}
+			}
+		}
+	}
+	return nil
+}
+
 func cloudGetNetworkPortList(cloudInfo *CloudInfo) []CloudNetworkPortInfo {
 	if npList, ok := cloudNetworkPorts[cloudInfo.Name]; ok == true {
 		return npList
 	}
 	var npList []CloudNetworkPortInfo
 	return npList
+}
+
+func resolveHypervisorName(cloudInfo *CloudInfo, ipAddress string) string {
+	if hypervisorNames, ok := cloudHypervisorNames[cloudInfo.Name]; ok {
+		if hypervisorName, ok := hypervisorNames[ipAddress]; ok {
+			return hypervisorName
+		}
+	}
+	return "unknown"
 }
 
 func resolveInstanceName(cloudInfo *CloudInfo, instanceID string) string {

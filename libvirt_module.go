@@ -9,10 +9,11 @@ import (
 )
 
 type LibvirtDomainInstance struct {
-	UUID         string
-	Name         string
-	InstanceName string
-	Interfaces   []LibvirtDomainInterface
+	UUID           string
+	Name           string
+	InstanceName   string
+	HypervisorName string
+	Interfaces     []LibvirtDomainInterface
 }
 
 type LibvirtDomainInterface struct {
@@ -153,10 +154,11 @@ func (c *LibvirtConnection) libvirtLoadDomainInfo(domain libvirt.VirDomain) (*Li
 	}
 
 	instance := LibvirtDomainInstance{
-		UUID:         uuid,
-		Name:         name,
-		InstanceName: resolveInstanceName(&c.cloudInfo, uuid),
-		Interfaces:   interfaces,
+		UUID:           uuid,
+		Name:           name,
+		InstanceName:   resolveInstanceName(&c.cloudInfo, uuid),
+		HypervisorName: resolveHypervisorName(&c.cloudInfo, c.ipAddress),
+		Interfaces:     interfaces,
 	}
 
 	return &instance, nil
@@ -218,4 +220,15 @@ func libvirtGetDomainInstances(ipAddress string) []LibvirtDomainInstance {
 	}
 	var dList []LibvirtDomainInstance
 	return dList
+}
+
+func libvirtGetDomainInstance(ipAddress string, instanceName string) *LibvirtDomainInstance {
+	if dList, ok := libvirtDomainInstances[ipAddress]; ok == true {
+		for _, di := range dList {
+			if di.InstanceName == instanceName {
+				return &di
+			}
+		}
+	}
+	return nil
 }
