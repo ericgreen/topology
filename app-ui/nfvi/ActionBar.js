@@ -58,42 +58,42 @@
 				var topo = this.topology();
 				topo.clear()
 				var topoContainer = this.topologyContainer();
-				topoContainer.loadTopology('http://localhost:9090/topology/cloudsTopology');
+				topoContainer.loadTopology(document.baseURI + '/topology/cloudsTopology');
 			},
 			'loadCloudTopology': function (sender, event) {
 				event.preventDefault();
 				var topo = this.topology();
 				topo.clear()
 				var topoContainer = this.topologyContainer();
-				topoContainer.loadTopology('http://localhost:9090/topology/cloudTopology');
+				topoContainer.loadTopology(document.baseURI + '/topology/cloudTopology');
 			},
 			'loadCloudInstanceTopology': function (sender, event) {
 				event.preventDefault();
 				var topo = this.topology();
 				topo.clear()
 				var topoContainer = this.topologyContainer();
-				topoContainer.loadTopology('http://localhost:9090/topology/cloudInstanceTopology');
+				topoContainer.loadTopology(document.baseURI + '/topology/cloudInstanceTopology');
 			},
 			'loadCloudNetworkTopology': function (sender, event) {
 				event.preventDefault();
 				var topo = this.topology();
 				topo.clear()
 				var topoContainer = this.topologyContainer();
-				topoContainer.loadTopology('http://localhost:9090/topology/cloudNetworkTopology');
+				topoContainer.loadTopology(document.baseURI + '/topology/cloudNetworkTopology');
 			},
 			'loadCloudInstanceNetworkTopology': function (sender, event) {
 				event.preventDefault();
 				var topo = this.topology();
 				topo.clear()
 				var topoContainer = this.topologyContainer();
-				topoContainer.loadTopology('http://localhost:9090/topology/cloudInstanceNetworkTopology');
+				topoContainer.loadTopology(document.baseURI + '/topology/cloudInstanceNetworkTopology');
 			},
 			'loadCloudInstanceOvsTopology': function (sender, event) {
 				event.preventDefault();
 				var topo = this.topology();
 				topo.clear()
 				var topoContainer = this.topologyContainer();
-				topoContainer.loadTopology('http://localhost:9090/topology/cloudInstanceOvsTopology');
+				topoContainer.loadTopology(document.baseURI + '/topology/cloudInstanceOvsTopology');
 			},
 			'assignTopology': function (topo) {
 				this.topology(topo);
