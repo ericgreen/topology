@@ -32,6 +32,9 @@ func discover() error {
 			if err = lc.libvirtLoadDomainInstances(); err != nil {
 				//return err
 			}
+			if err = lc.libvirtLoadPhysicalInterfaces(); err != nil {
+				//return err
+			}
 			lc.libvirtDisconnect()
 
 			oc, err := ovsConnect(cloudInfo, hypervisor.HostIP, 6640)

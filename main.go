@@ -47,10 +47,10 @@ func main() {
 
 	go discover()
 	/*
-	if err := discover(); err != nil {
-		fmt.Println("Discovery error:", err.Error())
-		panic(err)
-	}
+		if err := discover(); err != nil {
+			fmt.Println("Discovery error:", err.Error())
+			panic(err)
+		}
 	*/
 
 	go func() {

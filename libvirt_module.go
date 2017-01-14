@@ -31,6 +31,11 @@ type LibvirtDomainInterface struct {
 	TxDrop      int64
 }
 
+type LibvirtPhysicalInterface struct {
+	Name       string
+	MacAddress string
+}
+
 type LibvirtConnection struct {
 	cloudInfo  CloudInfo
 	ipAddress  string
@@ -38,6 +43,7 @@ type LibvirtConnection struct {
 }
 
 var libvirtDomainInstances map[string][]LibvirtDomainInstance = make(map[string][]LibvirtDomainInstance)
+var libvirtPhysicalInterfaces map[string][]LibvirtPhysicalInterface = make(map[string][]LibvirtPhysicalInterface)
 
 func libvirtConnect(cloudInfo CloudInfo, ipAddress string) (*LibvirtConnection, error) {
 	var err error
@@ -214,6 +220,63 @@ func (c *LibvirtConnection) libvirtLoadDomainInterfaceInfo(domain libvirt.VirDom
 	return interfaces, nil
 }
 
+func (c *LibvirtConnection) libvirtLoadPhysicalInterfaces() error {
+	logFields := log.Fields{
+		"Name":      c.cloudInfo.Name,
+		"IpAddress": c.ipAddress,
+	}
+
+	service.Logger().WithFields(logFields).Info("Loading libvirt physical interrfaces")
+
+	ifaces, err := c.connection.ListAllInterfaces(0)
+	if err != nil {
+		logFields := log.Fields{
+			"Name":      c.cloudInfo.Name,
+			"IpAddress": c.ipAddress,
+			"Error":     err.Error(),
+		}
+		service.Logger().WithFields(logFields).Error("Error getting libvirt physical interfaces")
+		return err
+	}
+
+	physicalInterfaces := make([]LibvirtPhysicalInterface, len(ifaces))
+	for i, iface := range ifaces {
+		name, err := iface.GetName()
+		if err != nil {
+			logFields = log.Fields{
+				"Name":      c.cloudInfo.Name,
+				"IpAddress": c.ipAddress,
+				"Error":     err.Error(),
+			}
+			service.Logger().WithFields(logFields).Error("Error getting libvirt physical interface name")
+			return err
+		}
+		macAddress, err := iface.GetMACString()
+		if err != nil {
+			logFields = log.Fields{
+				"Name":          c.cloudInfo.Name,
+				"IpAddress":     c.ipAddress,
+				"InterfaceName": name,
+				"Error":         err.Error(),
+			}
+			service.Logger().WithFields(logFields).Error("Error getting libvirt physical interface mac address")
+			return err
+		}
+
+		pIface := LibvirtPhysicalInterface{
+			Name:       name,
+			MacAddress: macAddress,
+		}
+
+		physicalInterfaces[i] = pIface
+	}
+	libvirtPhysicalInterfaces[c.ipAddress] = physicalInterfaces
+
+	service.Logger().WithFields(logFields).Info("Succesfully loaded libvirt physical interfaces")
+
+	return nil
+}
+
 func libvirtGetDomainInstances(ipAddress string) []LibvirtDomainInstance {
 	if dList, ok := libvirtDomainInstances[ipAddress]; ok == true {
 		return dList
@@ -232,3 +295,12 @@ func libvirtGetDomainInstance(ipAddress string, instanceName string) *LibvirtDom
 	}
 	return nil
 }
+
+func libvirtGetPhysicalInterfaces(ipAddress string) []LibvirtPhysicalInterface {
+	if iList, ok := libvirtPhysicalInterfaces[ipAddress]; ok == true {
+		return iList
+	}
+	var iList []LibvirtPhysicalInterface
+	return iList
+}
+

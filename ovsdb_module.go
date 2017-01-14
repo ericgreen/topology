@@ -19,12 +19,13 @@ type OvsPort struct {
 }
 
 type OvsInterface struct {
-	UUID        string
-	Name        string
-	Type        string
-	Options     map[string]string
-	ExternalIDs map[string]string
-	Statistics  map[string]float64
+	UUID            string
+	Name            string
+	MacAddressInUse string
+	Type            string
+	Options         map[string]string
+	ExternalIDs     map[string]string
+	Statistics      map[string]float64
 }
 
 type OvsBridgeConnection struct {
@@ -231,13 +232,22 @@ func (c *OvsConnection) ovsLoadInterfaces() error {
 			for k, v := range oMap.GoMap {
 				statistics[k.(string)] = v.(float64)
 			}
+			var macInUse string
+			switch row["mac_in_use"].(type) {
+			case string:
+				macInUse = row["mac_in_use"].(string)
+			default:
+				macInUse = ""
+
+			}
 			interfaces[i] = OvsInterface{
-				UUID:        row["_uuid"].([]interface{})[1].(string),
-				Name:        row["name"].(string),
-				Type:        row["type"].(string),
-				Options:     options,
-				ExternalIDs: externalIDs,
-				Statistics:  statistics,
+				UUID:            row["_uuid"].([]interface{})[1].(string),
+				Name:            row["name"].(string),
+				MacAddressInUse: macInUse,
+				Type:            row["type"].(string),
+				Options:         options,
+				ExternalIDs:     externalIDs,
+				Statistics:      statistics,
 			}
 		}
 		ovsInterfaces[c.ipAddress] = interfaces
@@ -366,6 +376,54 @@ func ovsGetBridgeConnection(ipAddress string, macAddress string) *OvsBridgeConne
 		for _, portUUID := range bridge.PortUUIDs {
 			if bridgeConnection.TargetPort.UUID == portUUID {
 				bridgeConnection.TargetBridge = bridge
+				found = true
+				break
+			}
+		}
+	}
+
+	if !found {
+		return nil
+	}
+
+	return &bridgeConnection
+}
+
+func ovsGetPhysicalPortConnection(ipAddress string, name string, macAddress string) *OvsBridgeConnection {
+	var bridgeConnection OvsBridgeConnection
+	interfaceList := ovsGetInterfaces(ipAddress)
+	portList := ovsGetPorts(ipAddress)
+	bridgeList := ovsGetBridges(ipAddress)
+	found := false
+	for _, iface := range interfaceList {
+		if iface.Type == ""  && iface.Name == name && iface.MacAddressInUse == macAddress {
+			bridgeConnection.SourceInterface = iface
+			found = true
+			break
+		}
+	}
+	if !found {
+		return nil
+	}
+
+	found = false
+	for _, port := range portList {
+		if bridgeConnection.SourceInterface.Name == port.Name {
+			bridgeConnection.SourcePort = port
+			found = true
+			break
+		}
+	}
+
+	if !found {
+		return nil
+	}
+
+	found = false
+	for _, bridge := range bridgeList {
+		for _, portUUID := range bridge.PortUUIDs {
+			if bridgeConnection.SourcePort.UUID == portUUID {
+				bridgeConnection.SourceBridge = bridge
 				found = true
 				break
 			}

@@ -1,13 +1,17 @@
 
 var $topologyContainer;
 
+nx.graphic.Icons.registerIcon("port", document.baseURI + "/nfvi/images/icon_ethernet.png", 32, 32);
+
 (function(nx, global) {
     nx.define('TopologyContainerNodeTooltipContent', nx.ui.Component, {
         properties: {
             node: {
                 set: function (value) {
                     var model = value.model();
-                    this.view('list').set('items', new nx.data.Dictionary(model.getData().props));
+                    items = new nx.data.Dictionary(model.getData().props);
+                    //items.setItem("type", model.getData().device_type);
+                    this.view('list').set('items', items);
                     this.view('views').set('items', new nx.data.Dictionary(model.getData().views));
                     this.topology = value.topology();
                     this.title(value.label());
