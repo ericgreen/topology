@@ -186,7 +186,9 @@ nx.graphic.Icons.registerIcon("port", document.baseURI + "/nfvi/images/icon_ethe
     nx.define('TopologyContainer', nx.ui.Component, {
         view: {
             props: {
-                'class': "demo-topology-via-api"
+                'class': 'nfvi-topology',
+                width: "100%",
+                height: "100%",
             },
             content: [
                 {
