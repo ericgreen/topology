@@ -226,7 +226,7 @@ func (c *LibvirtConnection) libvirtLoadPhysicalInterfaces() error {
 		"IpAddress": c.ipAddress,
 	}
 
-	service.Logger().WithFields(logFields).Info("Loading libvirt physical interrfaces")
+	service.Logger().WithFields(logFields).Info("Loading libvirt physical interfaces")
 
 	ifaces, err := c.connection.ListAllInterfaces(0)
 	if err != nil {
@@ -303,4 +303,3 @@ func libvirtGetPhysicalInterfaces(ipAddress string) []LibvirtPhysicalInterface {
 	var iList []LibvirtPhysicalInterface
 	return iList
 }
-

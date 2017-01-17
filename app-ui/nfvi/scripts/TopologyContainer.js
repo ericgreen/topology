@@ -1,6 +1,8 @@
 
 var $topologyContainer;
+var $urlStack = [];
 
+nx.graphic.Icons.registerIcon("bridge", document.baseURI + "/nfvi/images/bridge.jpg", 32, 32);
 nx.graphic.Icons.registerIcon("port", document.baseURI + "/nfvi/images/icon_ethernet.png", 32, 32);
 
 (function(nx, global) {
@@ -129,6 +131,7 @@ nx.graphic.Icons.registerIcon("port", document.baseURI + "/nfvi/images/icon_ethe
             openView: function(sender, event) {
                 event.preventDefault();
                 var url = $(event.srcElement.parentElement.parentElement.innerHTML).attr("addr");
+                $urlStack.push(url);
                 $topologyContainer.loadTopology(url);
             },
         }
@@ -193,6 +196,8 @@ nx.graphic.Icons.registerIcon("port", document.baseURI + "/nfvi/images/icon_ethe
                         'margin-left': '25%',
                     },
                     props: {
+                        width: "100%",
+                        height: "100%",
                         adaptive: true,
                         dataProcessor: 'force',
                         showIcon: true,

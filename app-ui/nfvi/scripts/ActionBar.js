@@ -58,42 +58,10 @@
 				var topo = this.topology();
 				topo.clear()
 				var topoContainer = this.topologyContainer();
-				topoContainer.loadTopology(document.baseURI + '/topology/cloudsTopology');
-			},
-			'loadCloudTopology': function (sender, event) {
-				event.preventDefault();
-				var topo = this.topology();
-				topo.clear()
-				var topoContainer = this.topologyContainer();
-				topoContainer.loadTopology(document.baseURI + '/topology/cloudTopology');
-			},
-			'loadCloudInstanceTopology': function (sender, event) {
-				event.preventDefault();
-				var topo = this.topology();
-				topo.clear()
-				var topoContainer = this.topologyContainer();
-				topoContainer.loadTopology(document.baseURI + '/topology/cloudInstanceTopology');
-			},
-			'loadCloudNetworkTopology': function (sender, event) {
-				event.preventDefault();
-				var topo = this.topology();
-				topo.clear()
-				var topoContainer = this.topologyContainer();
-				topoContainer.loadTopology(document.baseURI + '/topology/cloudNetworkTopology');
-			},
-			'loadCloudInstanceNetworkTopology': function (sender, event) {
-				event.preventDefault();
-				var topo = this.topology();
-				topo.clear()
-				var topoContainer = this.topologyContainer();
-				topoContainer.loadTopology(document.baseURI + '/topology/cloudInstanceNetworkTopology');
-			},
-			'loadCloudInstanceOvsTopology': function (sender, event) {
-				event.preventDefault();
-				var topo = this.topology();
-				topo.clear()
-				var topoContainer = this.topologyContainer();
-				topoContainer.loadTopology(document.baseURI + '/topology/cloudInstanceOvsTopology');
+				$urlStack.length = 0;
+				var url = document.baseURI + '/topology/cloudsTopology';
+				$urlStack.push(url);
+				topoContainer.loadTopology(url);
 			},
 			'assignTopology': function (topo) {
 				this.topology(topo);

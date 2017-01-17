@@ -16,7 +16,10 @@
                 actionBar.attach(this);
                 viewBar.attach(this);
                 topology.attach(this);
-                topologyContainer.loadTopology(document.baseURI + '/topology/cloudsTopology');
+				$urlStack.length = 0;
+				var url = document.baseURI + '/topology/cloudsTopology';
+				$urlStack.push(url);
+                topologyContainer.loadTopology(url);
             }
         }
     });

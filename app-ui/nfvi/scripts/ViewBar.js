@@ -5,7 +5,11 @@
 			'topologyContainer': null,
 			'viewItems': {
 				set: function (value) {
-					this.view('views').set('items', new nx.data.Dictionary(value));
+					var items = new nx.data.Dictionary(value);
+					if ($urlStack.length > 1) {
+						items.setItem("Back", $urlStack[$urlStack.length -2]);
+                    }
+					this.view('views').set('items', items);
 				}
 			},
 			'exportedData': ''
@@ -51,7 +55,14 @@
 				topo.clear()
 				var topoContainer = this.topologyContainer();
 				url = ($(event.srcElement.parentElement.outerHTML).attr("addr"));
-                //url = $(event.srcElement.parentElement.innerHTML).attr('addr')
+				text = $(event.srcElement.parentElement.innerHTML).text();
+				if (url == undefined) {
+                    url = $(event.srcElement.outerHTML).attr("addr");
+					text = $(event.srcElement.outerHTML).text();
+                }
+				if (text == 'Back') {
+                    $urlStack.pop();
+                }
 				topoContainer.loadTopology(url);
             },
 		}

@@ -136,9 +136,9 @@ func CloudTopology(ctx context.Context, rw http.ResponseWriter, r *http.Request)
 			DeviceType: "host",
 			//X:          200,
 			//Y:          (200 + (5 * i)),
-			Color:      "#9C27B0",
-			Props:      hypervisorNodeProps,
-			Views:      hypervisorNodeViews,
+			Color: "#9C27B0",
+			Props: hypervisorNodeProps,
+			Views: hypervisorNodeViews,
 		}
 		nodeList = append(nodeList, hyperviosrNode)
 
@@ -169,9 +169,9 @@ func CloudTopology(ctx context.Context, rw http.ResponseWriter, r *http.Request)
 			DeviceType: "router",
 			//X:          400,
 			//Y:          (200 + (5 * i)),
-			Color:      "#888888",
-			Props:      networkNodeProps,
-			Views:      networkNodeViews,
+			Color: "#888888",
+			Props: networkNodeProps,
+			Views: networkNodeViews,
 		}
 		nodeList = append(nodeList, networkNode)
 
@@ -354,9 +354,9 @@ func CloudLayer3NetworkTopology(ctx context.Context, rw http.ResponseWriter, r *
 			DeviceType: "router",
 			//X:          400,
 			//Y:          (200 + (5 * i)),
-			Color:      "#888888",
-			Props:      networkNodeProps,
-			Views:      networkNodeViews,
+			Color: "#888888",
+			Props: networkNodeProps,
+			Views: networkNodeViews,
 		}
 		nodeList = append(nodeList, networkNode)
 		nodeId++
@@ -461,9 +461,9 @@ func CloudLayer2NetworkTopology(ctx context.Context, rw http.ResponseWriter, r *
 			DeviceType: "host",
 			//X:          200,
 			//Y:          (200 + (5 * i)),
-			Color:      "#9C27B0",
-			Props:      hypervisorNodeProps,
-			Views:      hypervisorNodeViews,
+			Color: "#9C27B0",
+			Props: hypervisorNodeProps,
+			Views: hypervisorNodeViews,
 		}
 		nodeList = append(nodeList, hypervisorNode)
 		nodeId++
@@ -484,9 +484,9 @@ func CloudLayer2NetworkTopology(ctx context.Context, rw http.ResponseWriter, r *
 				DeviceType: "server",
 				//X:          300,
 				//Y:          (200 + (5 * j)),
-				Color:      "#0000FF",
-				Props:      instanceNodeProps,
-				Views:      instanceNodeViews,
+				Color: "#0000FF",
+				Props: instanceNodeProps,
+				Views: instanceNodeViews,
 			}
 			nodeList = append(nodeList, instanceNode)
 			//instanceNodeSetIdList = append(instanceNodeSetIdList, instanceNodeId)
@@ -513,11 +513,11 @@ func CloudLayer2NetworkTopology(ctx context.Context, rw http.ResponseWriter, r *
 				bridgeNode := TopologyNode{
 					ID:         bridgeNodeId,
 					Name:       iface.BridgeName,
-					DeviceType: "cloud",
+					DeviceType: "switch",
 					//X:          200,
 					//Y:          (200 + (5 * k)),
-					Color:      "#FF00FF",
-					Props:      bridgeNodeProps,
+					Color: "#FF00FF",
+					Props: bridgeNodeProps,
 				}
 				nodeList = append(nodeList, bridgeNode)
 				//bridgeNodeSetIdList = append(bridgeNodeSetIdList, bridgeNodeId)
@@ -555,9 +555,9 @@ func CloudLayer2NetworkTopology(ctx context.Context, rw http.ResponseWriter, r *
 						DeviceType: "router",
 						//X:          400,
 						//Y:          (200 + (5 * i)),
-						Color:      "#888888",
-						Props:      networkNodeProps,
-						Views:      networkNodeViews,
+						Color: "#888888",
+						Props: networkNodeProps,
+						Views: networkNodeViews,
 					}
 					nodeList = append(nodeList, networkNode)
 					networkLinkProps := make(map[string]interface{})
@@ -585,8 +585,8 @@ func CloudLayer2NetworkTopology(ctx context.Context, rw http.ResponseWriter, r *
 					DeviceType: "groups",
 					//X:          (200 + (100 * j)),
 					//Y:          400,
-					Color:      "#0000FF",
-					Props:      nodeSetProps,
+					Color: "#0000FF",
+					Props: nodeSetProps,
 				}
 				nodeSetList = append(nodeSetList, nodeSet)
 				nodeId++
@@ -602,8 +602,8 @@ func CloudLayer2NetworkTopology(ctx context.Context, rw http.ResponseWriter, r *
 			DeviceType: "groups",
 			//X:          200,
 			//Y:          200,
-			Color:      "#0000FF",
-			Props:      nodeSetProps,
+			Color: "#0000FF",
+			Props: nodeSetProps,
 		}
 		nodeSetList = append(nodeSetList, nodeSet)
 		nodeId++
@@ -655,11 +655,11 @@ func CloudOvsNetworkTopology(ctx context.Context, rw http.ResponseWriter, r *htt
 			bridgeNode := TopologyNode{
 				ID:         bridgeNodeId,
 				Name:       bridge.Name,
-				DeviceType: "cloud",
+				DeviceType: "switch",
 				//X:          (-100 + (-300 * j)),
 				//Y:          (-600 + (300 * j)),
-				Color:      "#00FF00",
-				Props:      bridgeNodeProps,
+				Color: "#00FF00",
+				Props: bridgeNodeProps,
 			}
 			nodeList = append(nodeList, bridgeNode)
 			nodeId++
@@ -724,9 +724,9 @@ func CloudOvsNetworkTopology(ctx context.Context, rw http.ResponseWriter, r *htt
 				DeviceType: "server",
 				//X:          800,
 				//Y:          (-200 + (5 * j)),
-				Color:      "#0000FF",
-				Props:      instanceNodeProps,
-				Views:      instanceNodeViews,
+				Color: "#0000FF",
+				Props: instanceNodeProps,
+				Views: instanceNodeViews,
 			}
 			nodeList = append(nodeList, instanceNode)
 			//instanceNodeSetIdList = append(instanceNodeSetIdList, instanceNodeId)
@@ -741,11 +741,11 @@ func CloudOvsNetworkTopology(ctx context.Context, rw http.ResponseWriter, r *htt
 				bridgeNode := TopologyNode{
 					ID:         bridgeNodeId,
 					Name:       iface.BridgeName,
-					DeviceType: "cloud",
+					DeviceType: "switch",
 					//X:          700,
 					//Y:          (-500 + (5 * k)),
-					Color:      "#FF00FF",
-					Props:      bridgeNodeProps,
+					Color: "#FF00FF",
+					Props: bridgeNodeProps,
 				}
 				nodeList = append(nodeList, bridgeNode)
 				//bridgeNodeSetIdList = append(bridgeNodeSetIdList, bridgeNodeId)
@@ -811,8 +811,8 @@ func CloudOvsNetworkTopology(ctx context.Context, rw http.ResponseWriter, r *htt
 					DeviceType: "groups",
 					//X:          (-200 + (100 * j)),
 					//Y:          400,
-					Color:      "#0000FF",
-					Props:      nodeSetProps,
+					Color: "#0000FF",
+					Props: nodeSetProps,
 				}
 				nodeSetList = append(nodeSetList, nodeSet)
 				nodeId++
@@ -831,13 +831,13 @@ func CloudOvsNetworkTopology(ctx context.Context, rw http.ResponseWriter, r *htt
 					DeviceType: "port",
 					//X:          700,
 					//Y:          (-500 + (5 * k)),
-					Color:      "#000000",
-					Props:      portNodeProps,
+					Color: "#000000",
+					Props: portNodeProps,
 				}
 				nodeList = append(nodeList, portNode)
 
 				var sourceBridgeId int
-				var sourceBridgeName string				
+				var sourceBridgeName string
 				ovsBridgeLinkProps := make(map[string]interface{})
 				ovsBridgeLinkProps["source_interface"] = bc.SourceInterface.Name
 				ovsBridgeLinkProps["source_port"] = bc.SourcePort.Name
@@ -1060,9 +1060,9 @@ func CloudHypervisorLayer2NetworkTopology(ctx context.Context, rw http.ResponseW
 			DeviceType: "server",
 			//X:          300,
 			//Y:          (200 + (5 * j)),
-			Color:      "#0000FF",
-			Props:      instanceNodeProps,
-			Views:      instanceNodeViews,
+			Color: "#0000FF",
+			Props: instanceNodeProps,
+			Views: instanceNodeViews,
 		}
 		nodeList = append(nodeList, instanceNode)
 		//instanceNodeSetIdList = append(instanceNodeSetIdList, instanceNodeId)
@@ -1089,11 +1089,11 @@ func CloudHypervisorLayer2NetworkTopology(ctx context.Context, rw http.ResponseW
 			bridgeNode := TopologyNode{
 				ID:         bridgeNodeId,
 				Name:       iface.BridgeName,
-				DeviceType: "cloud",
+				DeviceType: "switch",
 				//X:          200,
 				//Y:          (200 + (5 * k)),
-				Color:      "#FF00FF",
-				Props:      bridgeNodeProps,
+				Color: "#FF00FF",
+				Props: bridgeNodeProps,
 			}
 			nodeList = append(nodeList, bridgeNode)
 			//bridgeNodeSetIdList = append(bridgeNodeSetIdList, bridgeNodeId)
@@ -1130,9 +1130,9 @@ func CloudHypervisorLayer2NetworkTopology(ctx context.Context, rw http.ResponseW
 					DeviceType: "router",
 					//X:          400,
 					//Y:          (200 + (5 * i)),
-					Color:      "#888888",
-					Props:      networkNodeProps,
-					Views:      networkNodeViews,
+					Color: "#888888",
+					Props: networkNodeProps,
+					Views: networkNodeViews,
 				}
 				nodeList = append(nodeList, networkNode)
 				networkLinkProps := make(map[string]interface{})
@@ -1160,8 +1160,8 @@ func CloudHypervisorLayer2NetworkTopology(ctx context.Context, rw http.ResponseW
 				DeviceType: "groups",
 				//X:          (200 + (100 * j)),
 				//Y:          400,
-				Color:      "#0000FF",
-				Props:      nodeSetProps,
+				Color: "#0000FF",
+				Props: nodeSetProps,
 			}
 			nodeSetList = append(nodeSetList, nodeSet)
 			nodeId++
@@ -1209,11 +1209,11 @@ func CloudHypervisorOvsNetworkTopology(ctx context.Context, rw http.ResponseWrit
 		bridgeNode := TopologyNode{
 			ID:         bridgeNodeId,
 			Name:       bridge.Name,
-			DeviceType: "cloud",
+			DeviceType: "switch",
 			//X:          (-100 + (-300 * j)),
 			//Y:          (-600 + (300 * j)),
-			Color:      "#00FF00",
-			Props:      bridgeNodeProps,
+			Color: "#00FF00",
+			Props: bridgeNodeProps,
 		}
 		nodeList = append(nodeList, bridgeNode)
 		nodeId++
@@ -1278,9 +1278,9 @@ func CloudHypervisorOvsNetworkTopology(ctx context.Context, rw http.ResponseWrit
 			DeviceType: "server",
 			//X:          800,
 			//Y:          (-200 + (5 * j)),
-			Color:      "#0000FF",
-			Props:      instanceNodeProps,
-			Views:      instanceNodeViews,
+			Color: "#0000FF",
+			Props: instanceNodeProps,
+			Views: instanceNodeViews,
 		}
 		nodeList = append(nodeList, instanceNode)
 		//instanceNodeSetIdList = append(instanceNodeSetIdList, instanceNodeId)
@@ -1295,11 +1295,11 @@ func CloudHypervisorOvsNetworkTopology(ctx context.Context, rw http.ResponseWrit
 			bridgeNode := TopologyNode{
 				ID:         bridgeNodeId,
 				Name:       iface.BridgeName,
-				DeviceType: "cloud",
+				DeviceType: "switch",
 				//X:          700,
 				//Y:          (-500 + (5 * k)),
-				Color:      "#FF00FF",
-				Props:      bridgeNodeProps,
+				Color: "#FF00FF",
+				Props: bridgeNodeProps,
 			}
 			nodeList = append(nodeList, bridgeNode)
 			//bridgeNodeSetIdList = append(bridgeNodeSetIdList, bridgeNodeId)
@@ -1365,8 +1365,8 @@ func CloudHypervisorOvsNetworkTopology(ctx context.Context, rw http.ResponseWrit
 				DeviceType: "groups",
 				//X:          (-200 + (100 * j)),
 				//Y:          400,
-				Color:      "#0000FF",
-				Props:      nodeSetProps,
+				Color: "#0000FF",
+				Props: nodeSetProps,
 			}
 			nodeSetList = append(nodeSetList, nodeSet)
 			nodeId++
@@ -1385,8 +1385,8 @@ func CloudHypervisorOvsNetworkTopology(ctx context.Context, rw http.ResponseWrit
 				DeviceType: "port",
 				//X:          700,
 				//Y:          (-500 + (5 * k)),
-				Color:      "#000000",
-				Props:      portNodeProps,
+				Color: "#000000",
+				Props: portNodeProps,
 			}
 			nodeList = append(nodeList, portNode)
 
@@ -1430,8 +1430,8 @@ func CloudHypervisorOvsNetworkTopology(ctx context.Context, rw http.ResponseWrit
 			DeviceType: "groups",
 			//X:          500,
 			//Y:          200,
-			Color:      "#0000FF",
-			Props:      nodeSetProps,
+			Color: "#0000FF",
+			Props: nodeSetProps,
 		}
 		nodeSetList = append(nodeSetList, nodeSet)
 		nodeId++
@@ -1727,11 +1727,11 @@ func CloudInstanceLayer2NetworkTopology(ctx context.Context, rw http.ResponseWri
 		bridgeNode := TopologyNode{
 			ID:         bridgeNodeId,
 			Name:       iface.BridgeName,
-			DeviceType: "cloud",
+			DeviceType: "switch",
 			//X:          200,
 			//Y:          (200 + (5 * k)),
-			Color:      "#FF00FF",
-			Props:      bridgeNodeProps,
+			Color: "#FF00FF",
+			Props: bridgeNodeProps,
 		}
 		nodeList = append(nodeList, bridgeNode)
 		bridgeLinkProps := make(map[string]interface{})
@@ -1768,9 +1768,9 @@ func CloudInstanceLayer2NetworkTopology(ctx context.Context, rw http.ResponseWri
 				DeviceType: "router",
 				//X:          400,
 				//Y:          (200 + (5 * i)),
-				Color:      "#888888",
-				Props:      networkNodeProps,
-				Views:      networkNodeViews,
+				Color: "#888888",
+				Props: networkNodeProps,
+				Views: networkNodeViews,
 			}
 			nodeList = append(nodeList, networkNode)
 			networkLinkProps := make(map[string]interface{})
@@ -1832,11 +1832,11 @@ func CloudInstanceOvsNetworkTopology(ctx context.Context, rw http.ResponseWriter
 		bridgeNode := TopologyNode{
 			ID:         bridgeNodeId,
 			Name:       bridge.Name,
-			DeviceType: "cloud",
+			DeviceType: "switch",
 			//X:          (-100 + (-300 * j)),
 			//Y:          (-600 + (300 * j)),
-			Color:      "#00FF00",
-			Props:      bridgeNodeProps,
+			Color: "#00FF00",
+			Props: bridgeNodeProps,
 		}
 		nodeList = append(nodeList, bridgeNode)
 		nodeId++
@@ -1911,11 +1911,11 @@ func CloudInstanceOvsNetworkTopology(ctx context.Context, rw http.ResponseWriter
 		bridgeNode := TopologyNode{
 			ID:         bridgeNodeId,
 			Name:       iface.BridgeName,
-			DeviceType: "cloud",
+			DeviceType: "switch",
 			//X:          700,
 			//Y:          (-500 + (5 * k)),
-			Color:      "#FF00FF",
-			Props:      bridgeNodeProps,
+			Color: "#FF00FF",
+			Props: bridgeNodeProps,
 		}
 		nodeList = append(nodeList, bridgeNode)
 		//bridgeNodeSetIdList = append(bridgeNodeSetIdList, bridgeNodeId)
@@ -1984,8 +1984,8 @@ func CloudInstanceOvsNetworkTopology(ctx context.Context, rw http.ResponseWriter
 				DeviceType: "port",
 				//X:          700,
 				//Y:          (-500 + (5 * k)),
-				Color:      "#000000",
-				Props:      portNodeProps,
+				Color: "#000000",
+				Props: portNodeProps,
 			}
 			nodeList = append(nodeList, portNode)
 
