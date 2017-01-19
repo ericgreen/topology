@@ -652,6 +652,7 @@ func CloudOvsNetworkTopology(ctx context.Context, rw http.ResponseWriter, r *htt
 			bridgeNodeProps := make(map[string]interface{})
 			bridgeNodeProps["uuid"] = bridge.UUID
 			bridgeNodeProps["name"] = bridge.Name
+			bridgeNodeProps["hypervisor_ip"] = hypervisor.HostIP
 			bridgeNodeId := nodeId
 			bridgeNode := TopologyNode{
 				ID:         bridgeNodeId,
@@ -676,14 +677,22 @@ func CloudOvsNetworkTopology(ctx context.Context, rw http.ResponseWriter, r *htt
 				bridgeLinkProps[k] = v
 			}
 			for _, node := range nodeList {
-				if bc.SourceBridge.Name == node.Name {
+				hypervisorIP, ok := node.Props["hypervisor_ip"].(string)
+				if !ok {
+					continue
+				}
+				if bc.HostIP == hypervisorIP && bc.SourceBridge.Name == node.Name {
 					sourceBridgeId = node.ID
 					sourceBridgeName = node.Name
 					break
 				}
 			}
 			for _, node := range nodeList {
-				if bc.TargetBridge.Name == node.Name {
+				hypervisorIP, ok := node.Props["hypervisor_ip"].(string)
+				if !ok {
+					continue
+				}
+				if bc.HostIP == hypervisorIP && bc.TargetBridge.Name == node.Name {
 					targetBridgeId = node.ID
 					targetBridgeName = node.Name
 					break
@@ -783,7 +792,11 @@ func CloudOvsNetworkTopology(ctx context.Context, rw http.ResponseWriter, r *htt
 						ovsBridgeLinkProps[k] = v
 					}
 					for _, node := range nodeList {
-						if bc.TargetBridge.Name == node.Name {
+						hypervisorIP, ok := node.Props["hypervisor_ip"].(string)
+						if !ok {
+							continue
+						}
+						if bc.HostIP == hypervisorIP && bc.TargetBridge.Name == node.Name {
 							targetBridgeId = node.ID
 							targetBridgeName = node.Name
 							break
@@ -847,7 +860,11 @@ func CloudOvsNetworkTopology(ctx context.Context, rw http.ResponseWriter, r *htt
 					ovsBridgeLinkProps[k] = v
 				}
 				for _, node := range nodeList {
-					if bc.SourceBridge.Name == node.Name {
+					hypervisorIP, ok := node.Props["hypervisor_ip"].(string)
+					if !ok {
+						continue
+					}
+					if bc.HostIP == hypervisorIP && bc.SourceBridge.Name == node.Name {
 						sourceBridgeId = node.ID
 						sourceBridgeName = node.Name
 						break

@@ -29,6 +29,7 @@ type OvsInterface struct {
 }
 
 type OvsBridgeConnection struct {
+	HostIP string
 	SourceInterface OvsInterface
 	TargetInterface OvsInterface
 	SourcePort      OvsPort
@@ -293,6 +294,7 @@ func ovsGetBridgeConnections(ipAddress string) []OvsBridgeConnection {
 	for _, iface := range interfaceList {
 		if iface.Type == "patch" {
 			bridgeConnection := OvsBridgeConnection{
+				HostIP: ipAddress,
 				SourceInterface: iface,
 			}
 			bridgeConnections = append(bridgeConnections, bridgeConnection)
@@ -349,6 +351,7 @@ func ovsGetBridgeConnection(ipAddress string, macAddress string) *OvsBridgeConne
 	found := false
 	for _, iface := range interfaceList {
 		if iface.ExternalIDs["attached-mac"] == macAddress {
+			bridgeConnection.HostIP = ipAddress
 			bridgeConnection.TargetInterface = iface
 			found = true
 			break
@@ -397,6 +400,7 @@ func ovsGetPhysicalPortConnection(ipAddress string, name string, macAddress stri
 	found := false
 	for _, iface := range interfaceList {
 		if iface.Type == "" && iface.Name == name && iface.MacAddressInUse == macAddress {
+			bridgeConnection.HostIP = ipAddress
 			bridgeConnection.SourceInterface = iface
 			found = true
 			break
