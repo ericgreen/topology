@@ -934,6 +934,7 @@ func CloudHypervisorInstancesTopology(ctx context.Context, rw http.ResponseWrite
 		Props: hypervisorNodeProps,
 	}
 	nodeList = append(nodeList, hypervisorNode)
+	nodeId++
 
 	instanceList := libvirtGetDomainInstances(hypervisor.HostIP)
 	var instanceNodeSetIdList []int
