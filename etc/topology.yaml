@@ -42,11 +42,10 @@ app:
   
 cloudproviders:
   providers: [
-    {"name": "openstack-west-spirent", "auth_url": "http://10.140.64.103:5000", "user": "admin", "password": "password", "tenant": "admin", "provider": openstack},
     {"name": "dpdk-setup", "auth_url": "http://10.6.2.250:5000/v3", "user": "admin", "password": "0679405a698f4894", "tenant": "admin", "provider": openstack},
-    {"name": "calabasas-lab", "auth_url": "http://10.109.225.42:5000", "user": "test", "password": "spirent", "tenant": "CloudStress", "provider": openstack},
-    {"name": "node-10.domain.tld", "auth_url": "http://10.140.8.129:5000", "user": "admin", "password": "admin", "tenant": "admin", "provider": openstack},
     {"name": "sjc-ml-os-controller", "auth_url": "http://10.140.88.16:5000/v3", "user": "admin", "password": "spirent", "tenant": "admin", "provider": openstack},
+    {"name": "openstack-west-spirent", "auth_url": "http://10.140.64.103:5000", "user": "admin", "password": "password", "tenant": "admin", "provider": openstack},
+    {"name": "calabasas-lab", "auth_url": "http://10.109.225.42:5000", "user": "test", "password": "spirent", "tenant": "CloudStress", "provider": openstack},
+    #{"name": "node-10.domain.tld", "auth_url": "http://10.140.8.129:5000", "user": "admin", "password": "admin", "tenant": "admin", "provider": openstack},
     #{"name": "peacock", "auth_url": "http://10.140.88.7:5000/v3", "user": "admin", "password": "spirent", "tenant": "admin", "provider": openstack},
-    #{"name": "openstack-calabasas", "auth_url": "http://10.109.225.42:5000", "user": "test", "password": "spirent", "tenant": "CloudStress", "provider": openstack}
   ]

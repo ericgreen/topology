@@ -547,32 +547,43 @@ func CloudLayer2NetworkTopology(ctx context.Context, rw http.ResponseWriter, r *
 
 				network := cloudGetNetworkInfo(cloudName, iface.NetworkName)
 				if network != nil {
-					networkNodeProps := make(map[string]interface{})
-					networkNodeProps["id"] = network.ID
-					networkNodeViews := make(map[string]string)
-					networkNode := TopologyNode{
-						ID:         nodeId,
-						Name:       network.Name,
-						DeviceType: "router",
-						//X:          400,
-						//Y:          (200 + (5 * i)),
-						Color: "#888888",
-						Props: networkNodeProps,
-						Views: networkNodeViews,
+					networkNodeId := -1
+					for _, node := range nodeList {
+						if node.Name == network.Name {
+							networkNodeId = node.ID
+							break
+						}
 					}
-					nodeList = append(nodeList, networkNode)
+
+					if networkNodeId == -1 {
+						networkNodeProps := make(map[string]interface{})
+						networkNodeProps["id"] = network.ID
+						networkNodeViews := make(map[string]string)
+						networkNodeId = nodeId
+						networkNode := TopologyNode{
+							ID:         networkNodeId,
+							Name:       network.Name,
+							DeviceType: "router",
+							//X:          400,
+							//Y:          (200 + (5 * i)),
+							Color: "#888888",
+							Props: networkNodeProps,
+							Views: networkNodeViews,
+						}
+						nodeList = append(nodeList, networkNode)
+						nodeId++
+					}
 					networkLinkProps := make(map[string]interface{})
 					networkLinkProps["source_name"] = bridgeNode.Name
 					networkLinkProps["target_name"] = network.Name
 					networkLink := TopologyLink{
 						Name:   "",
 						Source: bridgeNodeId,
-						Target: nodeId,
+						Target: networkNodeId,
 						Color:  "#888888",
 						Props:  networkLinkProps,
 					}
 					linkList = append(linkList, networkLink)
-					nodeId++
 					linkId++
 				}
 			}
@@ -1138,34 +1149,46 @@ func CloudHypervisorLayer2NetworkTopology(ctx context.Context, rw http.ResponseW
 			linkList = append(linkList, bridgeLink)
 			nodeId++
 			linkId++
+
 			network := cloudGetNetworkInfo(cloudName, iface.NetworkName)
 			if network != nil {
-				networkNodeProps := make(map[string]interface{})
-				networkNodeProps["id"] = network.ID
-				networkNodeViews := make(map[string]string)
-				networkNode := TopologyNode{
-					ID:         nodeId,
-					Name:       network.Name,
-					DeviceType: "router",
-					//X:          400,
-					//Y:          (200 + (5 * i)),
-					Color: "#888888",
-					Props: networkNodeProps,
-					Views: networkNodeViews,
+				networkNodeId := -1
+				for _, node := range nodeList {
+					if node.Name == network.Name {
+						networkNodeId = node.ID
+						break
+					}
 				}
-				nodeList = append(nodeList, networkNode)
+
+				if networkNodeId == -1 {
+					networkNodeProps := make(map[string]interface{})
+					networkNodeProps["id"] = network.ID
+					networkNodeViews := make(map[string]string)
+					networkNodeId = nodeId
+					networkNode := TopologyNode{
+						ID:         networkNodeId,
+						Name:       network.Name,
+						DeviceType: "router",
+						//X:          400,
+						//Y:          (200 + (5 * i)),
+						Color: "#888888",
+						Props: networkNodeProps,
+						Views: networkNodeViews,
+					}
+					nodeList = append(nodeList, networkNode)
+					nodeId++
+				}
 				networkLinkProps := make(map[string]interface{})
 				networkLinkProps["source_name"] = bridgeNode.Name
 				networkLinkProps["target_name"] = network.Name
 				networkLink := TopologyLink{
 					Name:   "",
 					Source: bridgeNodeId,
-					Target: nodeId,
+					Target: networkNodeId,
 					Color:  "#888888",
 					Props:  networkLinkProps,
 				}
 				linkList = append(linkList, networkLink)
-				nodeId++
 				linkId++
 			}
 		}
