@@ -325,9 +325,20 @@ func libvirtGetDomainInstance(ipAddress string, instanceName string) *LibvirtDom
 }
 
 func libvirtGetPhysicalInterfaces(ipAddress string) []LibvirtPhysicalInterface {
+	dpdkInterfaces := ovsGetDPDKInterfaces(ipAddress)
+	pIfaces := make([]LibvirtPhysicalInterface, len(dpdkInterfaces))
+	for i, dIface := range dpdkInterfaces {
+		pIfaces[i] = LibvirtPhysicalInterface{
+			Name: dIface.Name,
+			MacAddress: dIface.MacAddressInUse,
+		}
+	}
+	fmt.Println(pIfaces)
 	if iList, ok := libvirtPhysicalInterfaces[ipAddress]; ok == true {
+		iList = append(iList, pIfaces...)
 		return iList
 	}
 	var iList []LibvirtPhysicalInterface
+	iList = append(iList, pIfaces...)
 	return iList
 }

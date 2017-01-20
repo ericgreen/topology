@@ -286,6 +286,20 @@ func ovsGetInterfaces(ipAddress string) []OvsInterface {
 	return iList
 }
 
+func ovsGetDPDKInterfaces(ipAddress string) []OvsInterface {
+	if iList, ok := ovsInterfaces[ipAddress]; ok == true {
+		var pIList []OvsInterface
+		for _, iface := range iList {
+			if iface.Type == "dpdk" {
+				pIList = append(pIList, iface)
+			}
+		}
+		return pIList
+	}
+	var pIList []OvsInterface
+	return pIList
+}
+
 func ovsGetBridgeConnections(ipAddress string) []OvsBridgeConnection {
 	var bridgeConnections []OvsBridgeConnection
 	interfaceList := ovsGetInterfaces(ipAddress)
@@ -399,7 +413,7 @@ func ovsGetPhysicalPortConnection(ipAddress string, name string, macAddress stri
 	bridgeList := ovsGetBridges(ipAddress)
 	found := false
 	for _, iface := range interfaceList {
-		if iface.Type == "" && iface.Name == name && iface.MacAddressInUse == macAddress {
+		if (iface.Type == "" || iface.Type == "dpdk" ) && iface.Name == name && iface.MacAddressInUse == macAddress {
 			bridgeConnection.HostIP = ipAddress
 			bridgeConnection.SourceInterface = iface
 			found = true
