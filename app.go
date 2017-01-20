@@ -525,6 +525,7 @@ func CloudLayer2NetworkTopology(ctx context.Context, rw http.ResponseWriter, r *
 				bridgeLinkProps := make(map[string]interface{})
 				bridgeLinkProps["source_name"] = instanceNode.Name
 				bridgeLinkProps["target_name"] = bridgeNode.Name
+				bridgeLinkProps["interface_type"] = iface.Type
 				bridgeLinkProps["rx_bytes"] = iface.RxBytes
 				bridgeLinkProps["rx_packets"] = iface.RxPackets
 				bridgeLinkProps["rx_errs"] = iface.RxErrs
@@ -658,6 +659,27 @@ func CloudOvsNetworkTopology(ctx context.Context, rw http.ResponseWriter, r *htt
 	linkId := 0
 
 	for _, hypervisor := range hypervisorList {
+		hypervisorNodeProps := make(map[string]interface{})
+		hypervisorNodeProps["id"] = hypervisor.ID
+		hypervisorNodeProps["host_name"] = hypervisor.HostName
+		hypervisorNodeProps["ip_address"] = hypervisor.HostIP
+		hypervisorNodeViews := make(map[string]string)
+		hypervisorNodeViews["Instance Topology"] = "http://" + r.Host + "/topology/cloudHypervisorInstancesTopology/" + cloudInfo.Name + "/" + hypervisor.Name
+		hypervisorNodeViews["Linux Bridges"] = "http://" + r.Host + "/topology/cloudHypervisorLayer2NetworkTopology/" + cloudInfo.Name + "/" + hypervisor.Name
+		hypervisorNodeViews["OVS Bridges"] = "http://" + r.Host + "/topology/cloudHypervisorOvsNetworkTopology/" + cloudName + "/" + hypervisor.Name
+		hypervisorNodeId := nodeId
+		hypervisorNode := TopologyNode{
+			ID:         hypervisorNodeId,
+			Name:       hypervisor.Name,
+			DeviceType: "host",
+			//X:          200,
+			//Y:          (200 + (5 * i)),
+			Color: "#9C27B0",
+			Props: hypervisorNodeProps,
+			Views: hypervisorNodeViews,
+		}
+		nodeList = append(nodeList, hypervisorNode)
+		nodeId++
 		bridgeList := ovsGetBridges(hypervisor.HostIP)
 		for _, bridge := range bridgeList {
 			bridgeNodeProps := make(map[string]interface{})
@@ -713,6 +735,8 @@ func CloudOvsNetworkTopology(ctx context.Context, rw http.ResponseWriter, r *htt
 			bridgeLinkProps["target_name"] = targetBridgeName
 			bridgeLinkProps["source_interface"] = bc.SourceInterface.Name
 			bridgeLinkProps["target_interface"] = bc.TargetInterface.Name
+			bridgeLinkProps["source_interface_type"] = bc.SourceInterface.Type
+			bridgeLinkProps["target_interface_type"] = bc.TargetInterface.Type
 			bridgeLinkProps["source_port"] = bc.SourcePort.Name
 			bridgeLinkProps["target_port"] = bc.TargetPort.Name
 
@@ -730,7 +754,6 @@ func CloudOvsNetworkTopology(ctx context.Context, rw http.ResponseWriter, r *htt
 		var instanceNodeSetIdList []int
 		for _, instance := range instanceList {
 			instanceNodeProps := make(map[string]interface{})
-			//instanceLinkProps := make(map[string]interface{})
 			instanceNodeProps["uuid"] = instance.UUID
 			instanceNodeProps["name"] = instance.Name
 			instanceNodeProps["hypervisor name"] = instance.HypervisorName
@@ -750,8 +773,19 @@ func CloudOvsNetworkTopology(ctx context.Context, rw http.ResponseWriter, r *htt
 				Views: instanceNodeViews,
 			}
 			nodeList = append(nodeList, instanceNode)
-			//instanceNodeSetIdList = append(instanceNodeSetIdList, instanceNodeId)
 			nodeId++
+			instanceLinkProps := make(map[string]interface{})
+			instanceLinkProps["source_name"] = hypervisorNode.Name
+			instanceLinkProps["target_name"] = instanceNode.Name
+			hypervisorLink := TopologyLink{
+				Name:   "",
+				Source: hypervisorNodeId,
+				Target: instanceNodeId,
+				Color:  "#0000FF",
+				Props:  instanceLinkProps,
+			}
+			linkList = append(linkList, hypervisorLink)
+			linkId++
 			var bridgeNodeSetIdList []int
 			for _, iface := range instance.Interfaces {
 				bridgeNodeProps := make(map[string]interface{})
@@ -773,6 +807,7 @@ func CloudOvsNetworkTopology(ctx context.Context, rw http.ResponseWriter, r *htt
 				bridgeLinkProps := make(map[string]interface{})
 				bridgeLinkProps["source_name"] = instanceNode.Name
 				bridgeLinkProps["target_name"] = bridgeNode.Name
+				bridgeLinkProps["interface_type"] = iface.Type
 				bridgeLinkProps["rx_bytes"] = iface.RxBytes
 				bridgeLinkProps["rx_packets"] = iface.RxPackets
 				bridgeLinkProps["rx_errs"] = iface.RxErrs
@@ -798,6 +833,7 @@ func CloudOvsNetworkTopology(ctx context.Context, rw http.ResponseWriter, r *htt
 					ovsBridgeLinkProps := make(map[string]interface{})
 					ovsBridgeLinkProps["source_name"] = bridgeNode.Name
 					ovsBridgeLinkProps["target_interface"] = bc.TargetInterface.Name
+					ovsBridgeLinkProps["target_interface_type"] = bc.TargetInterface.Type
 					ovsBridgeLinkProps["target_port"] = bc.TargetPort.Name
 					for k, v := range bc.TargetInterface.Statistics {
 						ovsBridgeLinkProps[k] = v
@@ -865,6 +901,7 @@ func CloudOvsNetworkTopology(ctx context.Context, rw http.ResponseWriter, r *htt
 				var sourceBridgeName string
 				ovsBridgeLinkProps := make(map[string]interface{})
 				ovsBridgeLinkProps["source_interface"] = bc.SourceInterface.Name
+				ovsBridgeLinkProps["source_interface_type"] = bc.SourceInterface.Type
 				ovsBridgeLinkProps["source_port"] = bc.SourcePort.Name
 				ovsBridgeLinkProps["target_name"] = iface.Name
 				for k, v := range bc.SourceInterface.Statistics {
@@ -1056,10 +1093,6 @@ func CloudHypervisorLayer2NetworkTopology(ctx context.Context, rw http.ResponseW
 	hypervisorNodeProps["id"] = hypervisor.ID
 	hypervisorNodeProps["host_name"] = hypervisor.HostName
 	hypervisorNodeProps["ip_address"] = hypervisor.HostIP
-	hypervisorNodeViews := make(map[string]string)
-	hypervisorNodeViews["Instance Topology"] = "http://" + r.Host + "/topology/cloudHypervisorInstancesTopology/" + cloudName + "/" + hypervisorName
-	hypervisorNodeViews["Linux Bridges"] = "http://" + r.Host + "/topology/cloudHypervisorLayer2NetworkTopology/" + cloudName + "/" + hypervisorName
-	hypervisorNodeViews["OVS Bridges"] = "http://" + r.Host + "/topology/cloudHypervisorOvsNetworkTopology/" + cloudName + "/" + hypervisorName
 	hypervisorNodeId := nodeId
 	hypervisorNode := TopologyNode{
 		ID:         hypervisorNodeId,
@@ -1069,7 +1102,6 @@ func CloudHypervisorLayer2NetworkTopology(ctx context.Context, rw http.ResponseW
 		//Y:          (200 + (5 * i)),
 		Color: "#9C27B0",
 		Props: hypervisorNodeProps,
-		Views: hypervisorNodeViews,
 	}
 	nodeList = append(nodeList, hypervisorNode)
 	nodeId++
@@ -1130,6 +1162,7 @@ func CloudHypervisorLayer2NetworkTopology(ctx context.Context, rw http.ResponseW
 			bridgeLinkProps := make(map[string]interface{})
 			bridgeLinkProps["source_name"] = instanceNode.Name
 			bridgeLinkProps["target_name"] = bridgeNode.Name
+			bridgeLinkProps["interface_type"] = iface.Type
 			bridgeLinkProps["rx_bytes"] = iface.RxBytes
 			bridgeLinkProps["rx_packets"] = iface.RxPackets
 			bridgeLinkProps["rx_errs"] = iface.RxErrs
@@ -1242,6 +1275,23 @@ func CloudHypervisorOvsNetworkTopology(ctx context.Context, rw http.ResponseWrit
 	nodeId := 0
 	linkId := 0
 
+	hypervisorNodeProps := make(map[string]interface{})
+	hypervisorNodeProps["id"] = hypervisor.ID
+	hypervisorNodeProps["host_name"] = hypervisor.HostName
+	hypervisorNodeProps["ip_address"] = hypervisor.HostIP
+	hypervisorNodeId := nodeId
+	hypervisorNode := TopologyNode{
+		ID:         hypervisorNodeId,
+		Name:       hypervisor.Name,
+		DeviceType: "host",
+		//X:          200,
+		//Y:          (200 + (5 * i)),
+		Color: "#9C27B0",
+		Props: hypervisorNodeProps,
+	}
+	nodeList = append(nodeList, hypervisorNode)
+	nodeId++
+
 	bridgeList := ovsGetBridges(hypervisor.HostIP)
 	for _, bridge := range bridgeList {
 		bridgeNodeProps := make(map[string]interface{})
@@ -1288,6 +1338,8 @@ func CloudHypervisorOvsNetworkTopology(ctx context.Context, rw http.ResponseWrit
 		bridgeLinkProps["target_name"] = targetBridgeName
 		bridgeLinkProps["source_interface"] = bc.SourceInterface.Name
 		bridgeLinkProps["target_interface"] = bc.TargetInterface.Name
+		bridgeLinkProps["source_interface_type"] = bc.SourceInterface.Type
+		bridgeLinkProps["target_interface_type"] = bc.TargetInterface.Type
 		bridgeLinkProps["source_port"] = bc.SourcePort.Name
 		bridgeLinkProps["target_port"] = bc.TargetPort.Name
 
@@ -1327,6 +1379,18 @@ func CloudHypervisorOvsNetworkTopology(ctx context.Context, rw http.ResponseWrit
 		nodeList = append(nodeList, instanceNode)
 		//instanceNodeSetIdList = append(instanceNodeSetIdList, instanceNodeId)
 		nodeId++
+		instanceLinkProps := make(map[string]interface{})
+		instanceLinkProps["source_name"] = hypervisorNode.Name
+		instanceLinkProps["target_name"] = instanceNode.Name
+		hypervisorLink := TopologyLink{
+			Name:   "",
+			Source: hypervisorNodeId,
+			Target: instanceNodeId,
+			Color:  "#0000FF",
+			Props:  instanceLinkProps,
+		}
+		linkList = append(linkList, hypervisorLink)
+		linkId++
 		var bridgeNodeSetIdList []int
 		for _, iface := range instance.Interfaces {
 			bridgeNodeProps := make(map[string]interface{})
@@ -1348,6 +1412,7 @@ func CloudHypervisorOvsNetworkTopology(ctx context.Context, rw http.ResponseWrit
 			bridgeLinkProps := make(map[string]interface{})
 			bridgeLinkProps["source_name"] = instanceNode.Name
 			bridgeLinkProps["target_name"] = bridgeNode.Name
+			bridgeLinkProps["interface_type"] = iface.Type
 			bridgeLinkProps["rx_bytes"] = iface.RxBytes
 			bridgeLinkProps["rx_packets"] = iface.RxPackets
 			bridgeLinkProps["rx_errs"] = iface.RxErrs
@@ -1373,6 +1438,7 @@ func CloudHypervisorOvsNetworkTopology(ctx context.Context, rw http.ResponseWrit
 				ovsBridgeLinkProps := make(map[string]interface{})
 				ovsBridgeLinkProps["source_name"] = bridgeNode.Name
 				ovsBridgeLinkProps["target_interface"] = bc.TargetInterface.Name
+				ovsBridgeLinkProps["target_interface_type"] = bc.TargetInterface.Type
 				ovsBridgeLinkProps["target_port"] = bc.TargetPort.Name
 				for k, v := range bc.TargetInterface.Statistics {
 					ovsBridgeLinkProps[k] = v
@@ -1436,6 +1502,7 @@ func CloudHypervisorOvsNetworkTopology(ctx context.Context, rw http.ResponseWrit
 			var sourceBridgeName string
 			ovsBridgeLinkProps := make(map[string]interface{})
 			ovsBridgeLinkProps["source_interface"] = bc.SourceInterface.Name
+			ovsBridgeLinkProps["source_interface_type"] = bc.SourceInterface.Type
 			ovsBridgeLinkProps["source_port"] = bc.SourcePort.Name
 			ovsBridgeLinkProps["target_name"] = iface.Name
 			for k, v := range bc.SourceInterface.Statistics {
@@ -1616,10 +1683,6 @@ func CloudInstanceLayer3NetworkTopology(ctx context.Context, rw http.ResponseWri
 	instanceNodeProps["uuid"] = instance.UUID
 	instanceNodeProps["name"] = instance.Name
 	instanceNodeProps["hypervisor name"] = instance.HypervisorName
-	instanceNodeViews := make(map[string]string)
-	instanceNodeViews["Networks"] = "http://" + r.Host + "/topology/cloudInstanceLayer3NetworkTopology/" + cloudName + "/" + hypervisor.Name + "/" + instance.InstanceName
-	instanceNodeViews["Linux Bridges"] = "http://" + r.Host + "/topology/cloudInstanceLayer2NetworkTopology/" + cloudName + "/" + hypervisor.Name + "/" + instance.InstanceName
-	instanceNodeViews["OVS Bridges"] = "http://" + r.Host + "/topology/cloudInstanceOvsNetworkTopology/" + cloudName + "/" + hypervisor.Name + "/" + instance.InstanceName
 	instanceNodeId := nodeId
 	instanceNode := TopologyNode{
 		ID:         nodeId,
@@ -1629,7 +1692,6 @@ func CloudInstanceLayer3NetworkTopology(ctx context.Context, rw http.ResponseWri
 		//Y:          (200 + (5 * j)),
 		Color: "#0000FF",
 		Props: instanceNodeProps,
-		Views: instanceNodeViews,
 	}
 	nodeList = append(nodeList, instanceNode)
 	nodeId++
@@ -1709,10 +1771,6 @@ func CloudInstanceLayer2NetworkTopology(ctx context.Context, rw http.ResponseWri
 	hypervisorNodeProps["id"] = hypervisor.ID
 	hypervisorNodeProps["host_name"] = hypervisor.HostName
 	hypervisorNodeProps["ip_address"] = hypervisor.HostIP
-	hypervisorNodeViews := make(map[string]string)
-	hypervisorNodeViews["Instance Topology"] = "http://" + r.Host + "/topology/cloudHypervisorInstancesTopology/" + cloudName + "/" + hypervisorName
-	hypervisorNodeViews["Linux Bridges"] = "http://" + r.Host + "/topology/cloudHypervisorLayer2NetworkTopology/" + cloudName + "/" + hypervisorName
-	hypervisorNodeViews["OVS Bridges"] = "http://" + r.Host + "/topology/cloudHypervisorOvsNetworkTopology/" + cloudName + "/" + hypervisorName
 	hypervisorNodeId := nodeId
 	hypervisorNode := TopologyNode{
 		ID:         hypervisorNodeId,
@@ -1722,7 +1780,6 @@ func CloudInstanceLayer2NetworkTopology(ctx context.Context, rw http.ResponseWri
 		//Y:          (200 + (5 * i)),
 		Color: "#9C27B0",
 		Props: hypervisorNodeProps,
-		Views: hypervisorNodeViews,
 	}
 	nodeList = append(nodeList, hypervisorNode)
 	nodeId++
@@ -1731,10 +1788,6 @@ func CloudInstanceLayer2NetworkTopology(ctx context.Context, rw http.ResponseWri
 	instanceNodeProps["uuid"] = instance.UUID
 	instanceNodeProps["name"] = instance.Name
 	instanceNodeProps["hypervisor name"] = instance.HypervisorName
-	instanceNodeViews := make(map[string]string)
-	instanceNodeViews["Networks"] = "http://" + r.Host + "/topology/cloudInstanceLayer3NetworkTopology/" + cloudName + "/" + hypervisor.Name + "/" + instance.InstanceName
-	instanceNodeViews["Linux Bridges"] = "http://" + r.Host + "/topology/cloudInstanceLayer2NetworkTopology/" + cloudName + "/" + hypervisorName + "/" + instanceName
-	instanceNodeViews["OVS Bridges"] = "http://" + r.Host + "/topology/cloudInstanceOvsNetworkTopology/" + cloudName + "/" + hypervisorName + "/" + instanceName
 	instanceNodeId := nodeId
 	instanceNode := TopologyNode{
 		ID:         instanceNodeId,
@@ -1744,7 +1797,6 @@ func CloudInstanceLayer2NetworkTopology(ctx context.Context, rw http.ResponseWri
 		//Y:          (200 + (5 * j)),
 		Color: "#0000FF",
 		Props: instanceNodeProps,
-		Views: instanceNodeViews,
 	}
 	nodeList = append(nodeList, instanceNode)
 	instanceLinkProps := make(map[string]interface{})
@@ -1779,6 +1831,7 @@ func CloudInstanceLayer2NetworkTopology(ctx context.Context, rw http.ResponseWri
 		bridgeLinkProps := make(map[string]interface{})
 		bridgeLinkProps["source_name"] = instanceNode.Name
 		bridgeLinkProps["target_name"] = bridgeNode.Name
+		bridgeLinkProps["interface_type"] = iface.Type
 		bridgeLinkProps["rx_bytes"] = iface.RxBytes
 		bridgeLinkProps["rx_packets"] = iface.RxPackets
 		bridgeLinkProps["rx_errs"] = iface.RxErrs
@@ -1911,6 +1964,8 @@ func CloudInstanceOvsNetworkTopology(ctx context.Context, rw http.ResponseWriter
 		bridgeLinkProps["target_name"] = targetBridgeName
 		bridgeLinkProps["source_interface"] = bc.SourceInterface.Name
 		bridgeLinkProps["target_interface"] = bc.TargetInterface.Name
+		bridgeLinkProps["source_interface_type"] = bc.SourceInterface.Type
+		bridgeLinkProps["target_interface_type"] = bc.TargetInterface.Type
 		bridgeLinkProps["source_port"] = bc.SourcePort.Name
 		bridgeLinkProps["target_port"] = bc.TargetPort.Name
 		bridgeLink := TopologyLink{
@@ -1927,10 +1982,6 @@ func CloudInstanceOvsNetworkTopology(ctx context.Context, rw http.ResponseWriter
 	instanceNodeProps["uuid"] = instance.UUID
 	instanceNodeProps["name"] = instance.Name
 	instanceNodeProps["hypervisor name"] = instance.HypervisorName
-	instanceNodeViews := make(map[string]string)
-	instanceNodeViews["Networks"] = "http://" + r.Host + "/topology/cloudInstanceLayer3NetworkTopology/" + cloudName + "/" + hypervisor.Name + "/" + instance.InstanceName
-	instanceNodeViews["Linux Bridges"] = "http://" + r.Host + "/topology/cloudInstanceLayer2NetworkTopology/" + cloudName + "/" + hypervisorName + "/" + instanceName
-	instanceNodeViews["OVS Bridges"] = "http://" + r.Host + "/topology/cloudInstanceOvsNetworkTopology/" + cloudName + "/" + hypervisorName + "/" + instanceName
 	instanceNodeId := nodeId
 	instanceNode := TopologyNode{
 		ID:         instanceNodeId,
@@ -1940,7 +1991,6 @@ func CloudInstanceOvsNetworkTopology(ctx context.Context, rw http.ResponseWriter
 		//Y:          (-200 + (5 * j)),
 		Color: "#0000FF",
 		Props: instanceNodeProps,
-		Views: instanceNodeViews,
 	}
 	nodeList = append(nodeList, instanceNode)
 	nodeId++
@@ -1964,6 +2014,7 @@ func CloudInstanceOvsNetworkTopology(ctx context.Context, rw http.ResponseWriter
 		bridgeLinkProps := make(map[string]interface{})
 		bridgeLinkProps["source_name"] = instanceNode.Name
 		bridgeLinkProps["target_name"] = bridgeNode.Name
+		bridgeLinkProps["interface_type"] = iface.Type
 		bridgeLinkProps["rx_bytes"] = iface.RxBytes
 		bridgeLinkProps["rx_packets"] = iface.RxPackets
 		bridgeLinkProps["rx_errs"] = iface.RxErrs
@@ -1989,6 +2040,7 @@ func CloudInstanceOvsNetworkTopology(ctx context.Context, rw http.ResponseWriter
 			ovsBridgeLinkProps := make(map[string]interface{})
 			ovsBridgeLinkProps["source_name"] = bridgeNode.Name
 			ovsBridgeLinkProps["target_interface"] = bc.TargetInterface.Name
+			ovsBridgeLinkProps["target_interface_type"] = bc.TargetInterface.Type
 			ovsBridgeLinkProps["target_port"] = bc.TargetPort.Name
 			for k, v := range bc.TargetInterface.Statistics {
 				ovsBridgeLinkProps[k] = v
@@ -2035,6 +2087,7 @@ func CloudInstanceOvsNetworkTopology(ctx context.Context, rw http.ResponseWriter
 			var sourceBridgeName string
 			ovsBridgeLinkProps := make(map[string]interface{})
 			ovsBridgeLinkProps["source_interface"] = bc.SourceInterface.Name
+			ovsBridgeLinkProps["source_interface_type"] = bc.SourceInterface.Type
 			ovsBridgeLinkProps["source_port"] = bc.SourcePort.Name
 			ovsBridgeLinkProps["target_name"] = iface.Name
 			for k, v := range bc.SourceInterface.Statistics {

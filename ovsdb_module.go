@@ -29,7 +29,7 @@ type OvsInterface struct {
 }
 
 type OvsBridgeConnection struct {
-	HostIP string
+	HostIP          string
 	SourceInterface OvsInterface
 	TargetInterface OvsInterface
 	SourcePort      OvsPort
@@ -294,7 +294,7 @@ func ovsGetBridgeConnections(ipAddress string) []OvsBridgeConnection {
 	for _, iface := range interfaceList {
 		if iface.Type == "patch" {
 			bridgeConnection := OvsBridgeConnection{
-				HostIP: ipAddress,
+				HostIP:          ipAddress,
 				SourceInterface: iface,
 			}
 			bridgeConnections = append(bridgeConnections, bridgeConnection)

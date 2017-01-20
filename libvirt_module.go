@@ -6,6 +6,7 @@ import (
 	"github.com/beevik/etree"
 	libvirt "github.com/rgbkrk/libvirt-go"
 	"strconv"
+	"strings"
 )
 
 type LibvirtDomainInstance struct {
@@ -17,9 +18,10 @@ type LibvirtDomainInstance struct {
 }
 
 type LibvirtDomainInterface struct {
+	MacAddress  string
+	Type        string
 	DevName     string
 	BridgeName  string
-	MacAddress  string
 	NetworkName string
 	RxBytes     int64
 	RxPackets   int64
@@ -184,37 +186,63 @@ func (c *LibvirtConnection) libvirtLoadDomainInterfaceInfo(domain libvirt.VirDom
 		return nil, err
 	}
 
-	interfaces := make([]LibvirtDomainInterface, len(doc.FindElements(".//devices/interface/target")))
-	for i, e := range doc.FindElements(".//devices/interface/target") {
-		devName := e.SelectAttr("dev").Value
-		se := doc.FindElement(".//devices/interface[" + strconv.Itoa(i+1) + "]/source")
-		bridgeName := se.SelectAttr("bridge").Value
+	interfaces := make([]LibvirtDomainInterface, len(doc.FindElements(".//devices/interface")))
+	for i, e := range doc.FindElements(".//devices/interface") {
+		ifType := e.SelectAttr("type").Value
 		me := doc.FindElement(".//devices/interface[" + strconv.Itoa(i+1) + "]/mac")
 		macAddr := me.SelectAttr("address").Value
-		stats, err := domain.InterfaceStats(devName)
-		if err != nil {
-			logFields := log.Fields{
-				"Name":      c.cloudInfo.Name,
-				"IpAddress": c.ipAddress,
-				"DevName":   devName,
-				"Error":     err.Error(),
-			}
-			service.Logger().WithFields(logFields).Error("Error reading libvirt interface stats for device")
-			return nil, err
+		te := doc.FindElement(".//devices/interface[" + strconv.Itoa(i+1) + "]/target")
+		devName := ""
+		if te != nil {
+			devName = te.SelectAttr("dev").Value
 		}
-		interfaces[i] = LibvirtDomainInterface{
-			DevName:     devName,
-			BridgeName:  bridgeName,
-			MacAddress:  macAddr,
-			NetworkName: resolveNetworkName(&c.cloudInfo, macAddr),
-			RxBytes:     stats.RxBytes,
-			RxPackets:   stats.RxPackets,
-			RxErrs:      stats.RxErrs,
-			RxDrop:      stats.RxDrop,
-			TxBytes:     stats.TxBytes,
-			TxPackets:   stats.TxPackets,
-			TxErrs:      stats.TxErrs,
-			TxDrop:      stats.TxDrop,
+		se := doc.FindElement(".//devices/interface[" + strconv.Itoa(i+1) + "]/source")
+		bridgeName := ""
+		if se != nil {
+			if ifType == "bridge" {
+				bridgeName = se.SelectAttr("bridge").Value
+			}
+			if ifType == "vhostuser" {
+				path := se.SelectAttr("path").Value
+				parts := strings.Split(path, "/")
+				bridgeName = parts[len(parts)-1]
+			}
+		}
+		if len(devName) == 0 {
+			interfaces[i] = LibvirtDomainInterface{
+				MacAddress:  macAddr,
+				Type:        ifType,
+				DevName:     devName,
+				BridgeName:  bridgeName,
+				NetworkName: resolveNetworkName(&c.cloudInfo, macAddr),
+			}
+		} else {
+			stats, err := domain.InterfaceStats(devName)
+			if err != nil {
+				logFields := log.Fields{
+					"Name":      c.cloudInfo.Name,
+					"IpAddress": c.ipAddress,
+					"DevName":   devName,
+					"Error":     err.Error(),
+				}
+				service.Logger().WithFields(logFields).Error("Error reading libvirt interface stats for device")
+				return nil, err
+			}
+			interfaces[i] = LibvirtDomainInterface{
+				MacAddress:  macAddr,
+				Type:        ifType,
+				DevName:     devName,
+				BridgeName:  bridgeName,
+				NetworkName: resolveNetworkName(&c.cloudInfo, macAddr),
+				RxBytes:     stats.RxBytes,
+				RxPackets:   stats.RxPackets,
+				RxErrs:      stats.RxErrs,
+				RxDrop:      stats.RxDrop,
+				TxBytes:     stats.TxBytes,
+				TxPackets:   stats.TxPackets,
+				TxErrs:      stats.TxErrs,
+				TxDrop:      stats.TxDrop,
+			}
 		}
 	}
 	return interfaces, nil
