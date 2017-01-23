@@ -333,7 +333,6 @@ func libvirtGetPhysicalInterfaces(ipAddress string) []LibvirtPhysicalInterface {
 			MacAddress: dIface.MacAddressInUse,
 		}
 	}
-	fmt.Println(pIfaces)
 	if iList, ok := libvirtPhysicalInterfaces[ipAddress]; ok == true {
 		iList = append(iList, pIfaces...)
 		return iList
