@@ -210,14 +210,26 @@ func cloudLoadInstances(cloudInfo CloudInfo) error {
 	var instances CloudInstances
 	json.Unmarshal([]byte(output), &instances)
 
-	cloudInstances[cloudInfo.Name] = instances.Instances
+	_, ok := cloudInstances[cloudInfo.Name]
+	if ok {
+		cloudInstances[cloudInfo.Name] = append(cloudInstances[cloudInfo.Name], instances.Instances...)
+	} else {
+		cloudInstances[cloudInfo.Name] = instances.Instances
+	}
 
 	instanceNames := make(map[string]string, len(instances.Instances))
 	for _, instance := range instances.Instances {
 		instanceNames[instance.ID] = instance.Name
 	}
 
-	cloudInstanceNames[cloudInfo.Name] = instanceNames
+	_, ok = cloudInstanceNames[cloudInfo.Name]
+	if ok {
+		for k, v := range instanceNames {
+			cloudInstanceNames[cloudInfo.Name][k] = v
+		}
+	} else {
+		cloudInstanceNames[cloudInfo.Name] = instanceNames
+	}
 
 	service.Logger().WithFields(logFields).Info("Sucessfully loaded instance list")
 
@@ -344,7 +356,20 @@ func cloudLoadNetworkPorts(cloudInfo CloudInfo) error {
 }
 
 func cloudGetCloudList() []CloudInfo {
-	return clouds
+	var cloudList []CloudInfo
+	for _, cloudInfo := range clouds {
+		found := false
+		for i, _ := range cloudList {
+			if cloudList[i].Name == cloudInfo.Name {
+				found = true
+				break
+			}
+		}
+		if !found {
+			cloudList = append(cloudList, cloudInfo)
+		}
+	}
+	return cloudList
 }
 
 func cloudGetCloudInfo(cloudName string) *CloudInfo {

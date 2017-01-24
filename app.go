@@ -44,9 +44,9 @@ func CloudsTopology(ctx context.Context, rw http.ResponseWriter, r *http.Request
 	for _, cloudInfo := range cloudList {
 		cloudProps := make(map[string]interface{})
 		cloudProps["authUrl"] = cloudInfo.AuthUrl
-		cloudProps["user"] = cloudInfo.User
+		///cloudProps["user"] = cloudInfo.User
 		//cloudProps["password"] = cloudInfo.Password
-		cloudProps["tenant"] = cloudInfo.Tenant
+		//cloudProps["tenant"] = cloudInfo.Tenant
 		cloudProps["provider"] = cloudInfo.Provider
 		cloudViews := make(map[string]string)
 		cloudViews["Cloud Topology"] = "http://" + r.Host + "/topology/cloudTopology/" + cloudInfo.Name
@@ -105,9 +105,9 @@ func CloudTopology(ctx context.Context, rw http.ResponseWriter, r *http.Request)
 
 	cloudProps := make(map[string]interface{})
 	cloudProps["authUrl"] = cloudInfo.AuthUrl
-	cloudProps["user"] = cloudInfo.User
+	//cloudProps["user"] = cloudInfo.User
 	//cloudProps["password"] = cloudInfo.Password
-	cloudProps["tenant"] = cloudInfo.Tenant
+	//cloudProps["tenant"] = cloudInfo.Tenant
 	cloudProps["provider"] = cloudInfo.Provider
 	cloudViews := make(map[string]string)
 	cloudNodeId := nodeId
