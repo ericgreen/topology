@@ -47,6 +47,18 @@ type LibvirtConnection struct {
 var libvirtDomainInstances map[string][]LibvirtDomainInstance = make(map[string][]LibvirtDomainInstance)
 var libvirtPhysicalInterfaces map[string][]LibvirtPhysicalInterface = make(map[string][]LibvirtPhysicalInterface)
 
+func libvirtLoadInfo(cloudInfo CloudInfo, ipAddress string) error {
+	lc, err := libvirtConnect(cloudInfo, ipAddress)
+	if err != nil {
+		return err
+	}
+	lc.libvirtLoadDomainInstances()
+	lc.libvirtLoadPhysicalInterfaces()
+	lc.libvirtDisconnect()
+
+	return nil
+}
+
 func libvirtConnect(cloudInfo CloudInfo, ipAddress string) (*LibvirtConnection, error) {
 	var err error
 	connectString := fmt.Sprintf("qemu+tcp://%s/system", ipAddress)

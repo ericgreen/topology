@@ -89,6 +89,13 @@ func cloudLoadCloudInfo() error {
 		}
 		service.Logger().WithFields(logFields).Info("Loaded Cloud Parameters")
 	}
+	for _, cloudInfo := range clouds {
+		cloudLoadHypervisors(cloudInfo)
+		cloudLoadInstances(cloudInfo)
+		cloudLoadNetworks(cloudInfo)
+		cloudLoadNetworkPorts(cloudInfo)
+	}
+
 	return nil
 }
 
@@ -221,7 +228,6 @@ func cloudLoadInstances(cloudInfo CloudInfo) error {
 	for _, instance := range instances.Instances {
 		instanceNames[instance.ID] = instance.Name
 	}
-
 	_, ok = cloudInstanceNames[cloudInfo.Name]
 	if ok {
 		for k, v := range instanceNames {

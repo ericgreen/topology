@@ -48,6 +48,22 @@ var ovsBridges map[string][]OvsBridge = make(map[string][]OvsBridge)
 var ovsPorts map[string][]OvsPort = make(map[string][]OvsPort)
 var ovsInterfaces map[string][]OvsInterface = make(map[string][]OvsInterface)
 
+func ovsLoadInfo(cloudInfo CloudInfo, ipAddress string) error {
+	oc, err := ovsConnect(cloudInfo, ipAddress, 6640)
+	if err != nil {
+		oc, err = ovsConnect(cloudInfo, ipAddress, 6641)
+		if err != nil {
+			return err
+		}
+	}
+	oc.ovsLoadBridges()
+	oc.ovsLoadInterfaces()
+	oc.ovsLoadPorts()
+	oc.ovsDisconnect()
+
+	return nil
+}
+
 func ovsConnect(cloudInfo CloudInfo, ipAddress string, port int) (*OvsConnection, error) {
 	logFields := log.Fields{
 		"Name":      cloudInfo.Name,
