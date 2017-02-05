@@ -429,7 +429,7 @@ func ovsGetPhysicalPortConnection(ipAddress string, name string, macAddress stri
 	bridgeList := ovsGetBridges(ipAddress)
 	found := false
 	for _, iface := range interfaceList {
-		if (iface.Type == "" || iface.Type == "dpdk" ) && iface.Name == name && iface.MacAddressInUse == macAddress {
+		if (iface.Type == "" || iface.Type == "dpdk") && iface.Name == name && iface.MacAddressInUse == macAddress {
 			bridgeConnection.HostIP = ipAddress
 			bridgeConnection.SourceInterface = iface
 			found = true

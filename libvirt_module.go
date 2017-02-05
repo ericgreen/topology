@@ -23,14 +23,7 @@ type LibvirtDomainInterface struct {
 	DevName     string
 	BridgeName  string
 	NetworkName string
-	RxBytes     int64
-	RxPackets   int64
-	RxErrs      int64
-	RxDrop      int64
-	TxBytes     int64
-	TxPackets   int64
-	TxErrs      int64
-	TxDrop      int64
+	Statistics  map[string]int64
 }
 
 type LibvirtPhysicalInterface struct {
@@ -220,6 +213,7 @@ func (c *LibvirtConnection) libvirtLoadDomainInterfaceInfo(domain libvirt.VirDom
 				bridgeName = parts[len(parts)-1]
 			}
 		}
+		sMap := make(map[string]int64)
 		if len(devName) == 0 {
 			interfaces[i] = LibvirtDomainInterface{
 				MacAddress:  macAddr,
@@ -227,6 +221,7 @@ func (c *LibvirtConnection) libvirtLoadDomainInterfaceInfo(domain libvirt.VirDom
 				DevName:     devName,
 				BridgeName:  bridgeName,
 				NetworkName: resolveNetworkName(&c.cloudInfo, macAddr),
+				Statistics:  sMap,
 			}
 		} else {
 			stats, err := domain.InterfaceStats(devName)
@@ -240,20 +235,21 @@ func (c *LibvirtConnection) libvirtLoadDomainInterfaceInfo(domain libvirt.VirDom
 				service.Logger().WithFields(logFields).Error("Error reading libvirt interface stats for device")
 				return nil, err
 			}
+			sMap["rx_bytes"] = stats.RxBytes
+			sMap["rx_packets"] = stats.RxPackets
+			sMap["rx_errs"] = stats.RxErrs
+			sMap["rx_drop"] = stats.RxDrop
+			sMap["tx_bytes"] = stats.TxBytes
+			sMap["tx_packets"] = stats.TxPackets
+			sMap["tx_errs"] = stats.TxErrs
+			sMap["tx_drop"] = stats.TxDrop
 			interfaces[i] = LibvirtDomainInterface{
 				MacAddress:  macAddr,
 				Type:        ifType,
 				DevName:     devName,
 				BridgeName:  bridgeName,
 				NetworkName: resolveNetworkName(&c.cloudInfo, macAddr),
-				RxBytes:     stats.RxBytes,
-				RxPackets:   stats.RxPackets,
-				RxErrs:      stats.RxErrs,
-				RxDrop:      stats.RxDrop,
-				TxBytes:     stats.TxBytes,
-				TxPackets:   stats.TxPackets,
-				TxErrs:      stats.TxErrs,
-				TxDrop:      stats.TxDrop,
+				Statistics:  sMap,
 			}
 		}
 	}
@@ -341,7 +337,7 @@ func libvirtGetPhysicalInterfaces(ipAddress string) []LibvirtPhysicalInterface {
 	pIfaces := make([]LibvirtPhysicalInterface, len(dpdkInterfaces))
 	for i, dIface := range dpdkInterfaces {
 		pIfaces[i] = LibvirtPhysicalInterface{
-			Name: dIface.Name,
+			Name:       dIface.Name,
 			MacAddress: dIface.MacAddressInUse,
 		}
 	}

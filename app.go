@@ -526,15 +526,9 @@ func CloudLayer2NetworkTopology(ctx context.Context, rw http.ResponseWriter, r *
 				bridgeLinkProps["source_name"] = instanceNode.Name
 				bridgeLinkProps["target_name"] = bridgeNode.Name
 				bridgeLinkProps["interface_type"] = iface.Type
-				bridgeLinkProps["rx_bytes"] = iface.RxBytes
-				bridgeLinkProps["rx_packets"] = iface.RxPackets
-				bridgeLinkProps["rx_errs"] = iface.RxErrs
-				bridgeLinkProps["rx_drop"] = iface.RxDrop
-				bridgeLinkProps["tx_bytes"] = iface.TxBytes
-				bridgeLinkProps["tx_packets"] = iface.TxPackets
-				bridgeLinkProps["tx_errs"] = iface.TxErrs
-				bridgeLinkProps["tx_drop"] = iface.TxDrop
-
+				for k, v := range iface.Statistics {
+					bridgeLinkProps[k] = v
+				}
 				bridgeLink := TopologyLink{
 					Name:   "",
 					Source: instanceNodeId,
@@ -808,14 +802,9 @@ func CloudOvsNetworkTopology(ctx context.Context, rw http.ResponseWriter, r *htt
 				bridgeLinkProps["source_name"] = instanceNode.Name
 				bridgeLinkProps["target_name"] = bridgeNode.Name
 				bridgeLinkProps["interface_type"] = iface.Type
-				bridgeLinkProps["rx_bytes"] = iface.RxBytes
-				bridgeLinkProps["rx_packets"] = iface.RxPackets
-				bridgeLinkProps["rx_errs"] = iface.RxErrs
-				bridgeLinkProps["rx_drop"] = iface.RxDrop
-				bridgeLinkProps["tx_bytes"] = iface.TxBytes
-				bridgeLinkProps["tx_packets"] = iface.TxPackets
-				bridgeLinkProps["tx_errs"] = iface.TxErrs
-				bridgeLinkProps["tx_drop"] = iface.TxDrop
+				for k, v := range iface.Statistics {
+					bridgeLinkProps[k] = v
+				}
 				bridgeLink := TopologyLink{
 					Name:   "",
 					Source: instanceNodeId,
@@ -1163,15 +1152,9 @@ func CloudHypervisorLayer2NetworkTopology(ctx context.Context, rw http.ResponseW
 			bridgeLinkProps["source_name"] = instanceNode.Name
 			bridgeLinkProps["target_name"] = bridgeNode.Name
 			bridgeLinkProps["interface_type"] = iface.Type
-			bridgeLinkProps["rx_bytes"] = iface.RxBytes
-			bridgeLinkProps["rx_packets"] = iface.RxPackets
-			bridgeLinkProps["rx_errs"] = iface.RxErrs
-			bridgeLinkProps["rx_drop"] = iface.RxDrop
-			bridgeLinkProps["tx_bytes"] = iface.TxBytes
-			bridgeLinkProps["tx_packets"] = iface.TxPackets
-			bridgeLinkProps["tx_errs"] = iface.TxErrs
-			bridgeLinkProps["tx_drop"] = iface.TxDrop
-
+			for k, v := range iface.Statistics {
+				bridgeLinkProps[k] = v
+			}
 			bridgeLink := TopologyLink{
 				Name:   "",
 				Source: instanceNodeId,
@@ -1413,14 +1396,9 @@ func CloudHypervisorOvsNetworkTopology(ctx context.Context, rw http.ResponseWrit
 			bridgeLinkProps["source_name"] = instanceNode.Name
 			bridgeLinkProps["target_name"] = bridgeNode.Name
 			bridgeLinkProps["interface_type"] = iface.Type
-			bridgeLinkProps["rx_bytes"] = iface.RxBytes
-			bridgeLinkProps["rx_packets"] = iface.RxPackets
-			bridgeLinkProps["rx_errs"] = iface.RxErrs
-			bridgeLinkProps["rx_drop"] = iface.RxDrop
-			bridgeLinkProps["tx_bytes"] = iface.TxBytes
-			bridgeLinkProps["tx_packets"] = iface.TxPackets
-			bridgeLinkProps["tx_errs"] = iface.TxErrs
-			bridgeLinkProps["tx_drop"] = iface.TxDrop
+			for k, v := range iface.Statistics {
+				bridgeLinkProps[k] = v
+			}
 			bridgeLink := TopologyLink{
 				Name:   "",
 				Source: instanceNodeId,
@@ -1832,15 +1810,9 @@ func CloudInstanceLayer2NetworkTopology(ctx context.Context, rw http.ResponseWri
 		bridgeLinkProps["source_name"] = instanceNode.Name
 		bridgeLinkProps["target_name"] = bridgeNode.Name
 		bridgeLinkProps["interface_type"] = iface.Type
-		bridgeLinkProps["rx_bytes"] = iface.RxBytes
-		bridgeLinkProps["rx_packets"] = iface.RxPackets
-		bridgeLinkProps["rx_errs"] = iface.RxErrs
-		bridgeLinkProps["rx_drop"] = iface.RxDrop
-		bridgeLinkProps["tx_bytes"] = iface.TxBytes
-		bridgeLinkProps["tx_packets"] = iface.TxPackets
-		bridgeLinkProps["tx_errs"] = iface.TxErrs
-		bridgeLinkProps["tx_drop"] = iface.TxDrop
-
+		for k, v := range iface.Statistics {
+			bridgeLinkProps[k] = v
+		}
 		bridgeLink := TopologyLink{
 			Name:   "",
 			Source: instanceNodeId,
@@ -2015,14 +1987,9 @@ func CloudInstanceOvsNetworkTopology(ctx context.Context, rw http.ResponseWriter
 		bridgeLinkProps["source_name"] = instanceNode.Name
 		bridgeLinkProps["target_name"] = bridgeNode.Name
 		bridgeLinkProps["interface_type"] = iface.Type
-		bridgeLinkProps["rx_bytes"] = iface.RxBytes
-		bridgeLinkProps["rx_packets"] = iface.RxPackets
-		bridgeLinkProps["rx_errs"] = iface.RxErrs
-		bridgeLinkProps["rx_drop"] = iface.RxDrop
-		bridgeLinkProps["tx_bytes"] = iface.TxBytes
-		bridgeLinkProps["tx_packets"] = iface.TxPackets
-		bridgeLinkProps["tx_errs"] = iface.TxErrs
-		bridgeLinkProps["tx_drop"] = iface.TxDrop
+		for k, v := range iface.Statistics {
+			bridgeLinkProps[k] = v
+		}
 		bridgeLink := TopologyLink{
 			Name:   "",
 			Source: instanceNodeId,
