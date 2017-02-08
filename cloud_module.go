@@ -25,6 +25,7 @@ type CloudHypervisorInfo struct {
 	Name     string `json:"name"`
 	HostIP   string `json:"host_ip"`
 	HostName string `json:"host_name"`
+	State	 string `json:state"`
 }
 
 type CloudInstances struct {
