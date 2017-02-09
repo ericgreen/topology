@@ -152,6 +152,18 @@ func cloudLoadHypervisors(cloudInfo CloudInfo) error {
 	var hypervisors CloudHypervisors
 	json.Unmarshal([]byte(output), &hypervisors)
 
+	var droppedHypervisors []int
+	for i, _ := range hypervisors.Hypervisors {
+		for j, _ := range hypervisors.Hypervisors {
+			if i != j && hypervisors.Hypervisors[i].State == "down" && hypervisors.Hypervisors[i].HostIP == hypervisors.Hypervisors[j].HostIP {
+				droppedHypervisors = append(droppedHypervisors, i)
+			}
+		}
+	}
+	for _,i := range droppedHypervisors {
+		hypervisors.Hypervisors = append(hypervisors.Hypervisors[:i], hypervisors.Hypervisors[i+1:]...)
+	}
+
 	cloudHypervisors[cloudInfo.Name] = hypervisors.Hypervisors
 
 	hypervisorNames := make(map[string]string, len(hypervisors.Hypervisors))
