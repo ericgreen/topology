@@ -127,6 +127,11 @@ func CloudTopology(ctx context.Context, rw http.ResponseWriter, r *http.Request)
 		hypervisorNodeProps["id"] = hypervisor.ID
 		hypervisorNodeProps["host_name"] = hypervisor.HostName
 		hypervisorNodeProps["ip_address"] = hypervisor.HostIP
+		hypervisorNodeProps["state"] = hypervisor.State
+		hypervisorNodeColor := "#9C27B0"
+		if hypervisor.State == "down" {
+			hypervisorNodeColor = "#FF0000"
+		}
 		hypervisorNodeViews := make(map[string]string)
 		hypervisorNodeViews["Instance Topology"] = "http://" + r.Host + "/topology/cloudHypervisorInstancesTopology/" + cloudInfo.Name + "/" + hypervisor.Name
 		hypervisorNodeViews["Linux Bridges"] = "http://" + r.Host + "/topology/cloudHypervisorLayer2NetworkTopology/" + cloudInfo.Name + "/" + hypervisor.Name
@@ -136,7 +141,7 @@ func CloudTopology(ctx context.Context, rw http.ResponseWriter, r *http.Request)
 			DeviceType: "host",
 			//X:          200,
 			//Y:          (200 + (5 * i)),
-			Color: "#9C27B0",
+			Color: hypervisorNodeColor,
 			Props: hypervisorNodeProps,
 			Views: hypervisorNodeViews,
 		}
@@ -231,6 +236,11 @@ func CloudHypervisorTopology(ctx context.Context, rw http.ResponseWriter, r *htt
 		hypervisorNodeProps["id"] = hypervisor.ID
 		hypervisorNodeProps["host_name"] = hypervisor.HostName
 		hypervisorNodeProps["ip_address"] = hypervisor.HostIP
+		hypervisorNodeProps["state"] = hypervisor.State
+		hypervisorNodeColor := "#9C27B0"
+		if hypervisor.State == "down" {
+			hypervisorNodeColor = "#FF0000"
+		}
 		hypervisorNodeViews := make(map[string]string)
 		hypervisorNodeViews["Instance Topology"] = "http://" + r.Host + "/topology/cloudHypervisorInstancesTopology/" + cloudInfo.Name + "/" + hypervisor.Name
 		hypervisorNodeViews["Linux Bridges"] = "http://" + r.Host + "/topology/cloudHypervisorLayer2NetworkTopology/" + cloudInfo.Name + "/" + hypervisor.Name
@@ -242,7 +252,7 @@ func CloudHypervisorTopology(ctx context.Context, rw http.ResponseWriter, r *htt
 			DeviceType: "host",
 			//X:          200,
 			//Y:          (200 + (5 * i)),
-			Color: "#9C27B0",
+			Color: hypervisorNodeColor,
 			Props: hypervisorNodeProps,
 			Views: hypervisorNodeViews,
 		}
@@ -451,6 +461,11 @@ func CloudLayer2NetworkTopology(ctx context.Context, rw http.ResponseWriter, r *
 		hypervisorNodeProps["id"] = hypervisor.ID
 		hypervisorNodeProps["host_name"] = hypervisor.HostName
 		hypervisorNodeProps["ip_address"] = hypervisor.HostIP
+		hypervisorNodeProps["state"] = hypervisor.State
+		hypervisorNodeColor := "#9C27B0"
+		if hypervisor.State == "down" {
+			hypervisorNodeColor = "#FF0000"
+		}		
 		hypervisorNodeViews := make(map[string]string)
 		hypervisorNodeViews["Instance Topology"] = "http://" + r.Host + "/topology/cloudHypervisorInstancesTopology/" + cloudInfo.Name + "/" + hypervisor.Name
 		hypervisorNodeViews["Linux Bridges"] = "http://" + r.Host + "/topology/cloudHypervisorLayer2NetworkTopology/" + cloudInfo.Name + "/" + hypervisor.Name
@@ -462,7 +477,7 @@ func CloudLayer2NetworkTopology(ctx context.Context, rw http.ResponseWriter, r *
 			DeviceType: "host",
 			//X:          200,
 			//Y:          (200 + (5 * i)),
-			Color: "#9C27B0",
+			Color: hypervisorNodeColor,
 			Props: hypervisorNodeProps,
 			Views: hypervisorNodeViews,
 		}
@@ -657,6 +672,11 @@ func CloudOvsNetworkTopology(ctx context.Context, rw http.ResponseWriter, r *htt
 		hypervisorNodeProps["id"] = hypervisor.ID
 		hypervisorNodeProps["host_name"] = hypervisor.HostName
 		hypervisorNodeProps["ip_address"] = hypervisor.HostIP
+		hypervisorNodeProps["state"] = hypervisor.State
+		hypervisorNodeColor := "#9C27B0"
+		if hypervisor.State == "down" {
+			hypervisorNodeColor = "#FF0000"
+		}		
 		hypervisorNodeViews := make(map[string]string)
 		hypervisorNodeViews["Instance Topology"] = "http://" + r.Host + "/topology/cloudHypervisorInstancesTopology/" + cloudInfo.Name + "/" + hypervisor.Name
 		hypervisorNodeViews["Linux Bridges"] = "http://" + r.Host + "/topology/cloudHypervisorLayer2NetworkTopology/" + cloudInfo.Name + "/" + hypervisor.Name
@@ -668,7 +688,7 @@ func CloudOvsNetworkTopology(ctx context.Context, rw http.ResponseWriter, r *htt
 			DeviceType: "host",
 			//X:          200,
 			//Y:          (200 + (5 * i)),
-			Color: "#9C27B0",
+			Color: hypervisorNodeColor,
 			Props: hypervisorNodeProps,
 			Views: hypervisorNodeViews,
 		}
@@ -977,6 +997,11 @@ func CloudHypervisorInstancesTopology(ctx context.Context, rw http.ResponseWrite
 	hypervisorNodeProps["id"] = hypervisor.ID
 	hypervisorNodeProps["host_name"] = hypervisor.HostName
 	hypervisorNodeProps["ip_address"] = hypervisor.HostIP
+	hypervisorNodeProps["state"] = hypervisor.State
+	hypervisorNodeColor := "#9C27B0"
+	if hypervisor.State == "down" {
+		hypervisorNodeColor = "#FF0000"
+	}	
 	hypervisorNodeId := nodeId
 	hypervisorNode := TopologyNode{
 		ID:         hypervisorNodeId,
@@ -984,7 +1009,7 @@ func CloudHypervisorInstancesTopology(ctx context.Context, rw http.ResponseWrite
 		DeviceType: "host",
 		//X:          200,
 		//Y:          (200 + (5 * i)),
-		Color: "#9C27B0",
+		Color: hypervisorNodeColor,
 		Props: hypervisorNodeProps,
 	}
 	nodeList = append(nodeList, hypervisorNode)
@@ -1082,6 +1107,11 @@ func CloudHypervisorLayer2NetworkTopology(ctx context.Context, rw http.ResponseW
 	hypervisorNodeProps["id"] = hypervisor.ID
 	hypervisorNodeProps["host_name"] = hypervisor.HostName
 	hypervisorNodeProps["ip_address"] = hypervisor.HostIP
+	hypervisorNodeProps["state"] = hypervisor.State
+	hypervisorNodeColor := "#9C27B0"
+	if hypervisor.State == "down" {
+		hypervisorNodeColor = "#FF0000"
+	}	
 	hypervisorNodeId := nodeId
 	hypervisorNode := TopologyNode{
 		ID:         hypervisorNodeId,
@@ -1089,7 +1119,7 @@ func CloudHypervisorLayer2NetworkTopology(ctx context.Context, rw http.ResponseW
 		DeviceType: "host",
 		//X:          200,
 		//Y:          (200 + (5 * i)),
-		Color: "#9C27B0",
+		Color: hypervisorNodeColor,
 		Props: hypervisorNodeProps,
 	}
 	nodeList = append(nodeList, hypervisorNode)
@@ -1262,6 +1292,11 @@ func CloudHypervisorOvsNetworkTopology(ctx context.Context, rw http.ResponseWrit
 	hypervisorNodeProps["id"] = hypervisor.ID
 	hypervisorNodeProps["host_name"] = hypervisor.HostName
 	hypervisorNodeProps["ip_address"] = hypervisor.HostIP
+	hypervisorNodeProps["state"] = hypervisor.State
+	hypervisorNodeColor := "#9C27B0"
+	if hypervisor.State == "down" {
+		hypervisorNodeColor = "#FF0000"
+	}	
 	hypervisorNodeId := nodeId
 	hypervisorNode := TopologyNode{
 		ID:         hypervisorNodeId,
@@ -1269,7 +1304,7 @@ func CloudHypervisorOvsNetworkTopology(ctx context.Context, rw http.ResponseWrit
 		DeviceType: "host",
 		//X:          200,
 		//Y:          (200 + (5 * i)),
-		Color: "#9C27B0",
+		Color: hypervisorNodeColor,
 		Props: hypervisorNodeProps,
 	}
 	nodeList = append(nodeList, hypervisorNode)
@@ -1749,6 +1784,11 @@ func CloudInstanceLayer2NetworkTopology(ctx context.Context, rw http.ResponseWri
 	hypervisorNodeProps["id"] = hypervisor.ID
 	hypervisorNodeProps["host_name"] = hypervisor.HostName
 	hypervisorNodeProps["ip_address"] = hypervisor.HostIP
+	hypervisorNodeProps["state"] = hypervisor.State
+	hypervisorNodeColor := "#9C27B0"
+	if hypervisor.State == "down" {
+		hypervisorNodeColor = "#FF0000"
+	}	
 	hypervisorNodeId := nodeId
 	hypervisorNode := TopologyNode{
 		ID:         hypervisorNodeId,
@@ -1756,7 +1796,7 @@ func CloudInstanceLayer2NetworkTopology(ctx context.Context, rw http.ResponseWri
 		DeviceType: "host",
 		//X:          200,
 		//Y:          (200 + (5 * i)),
-		Color: "#9C27B0",
+		Color: hypervisorNodeColor,
 		Props: hypervisorNodeProps,
 	}
 	nodeList = append(nodeList, hypervisorNode)
