@@ -3807,7 +3807,7 @@ This Agreement is governed by the laws of the State of New York and the intellec
 .n-topology-tooltip {
   padding: 0px;
   opacity: 0.8 !important;
-  /*max-height: 600px; */
+  max-height: 700px;
 }
 .n-topology-tooltip-header {
   min-width: 160px;
