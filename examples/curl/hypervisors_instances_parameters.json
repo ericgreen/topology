@@ -1,0 +1,20 @@
+{
+    "hypervisor_instances": [
+        {
+            "host_name": "sjc-ml-os-comp1.ad.spirentcom.com",
+            "instance_names": [
+                "STCv-1",
+                "STCv-2",
+                "STCv Test-2"
+            ]
+        },
+        {
+            "host_name": "sjc-ml-os-comp3.ad.spirentcom.com",
+            "instance_names": [
+                "STCv Test-1",
+                "TEMEVA-OnPrem-Controller-LD-v794"
+            ]
+        }
+
+    ]
+}

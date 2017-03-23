@@ -35,6 +35,7 @@ type CloudInstances struct {
 type CloudInstanceInfo struct {
 	ID   string `json:"id"`
 	Name string `json:"name"`
+	HostName string `json:"host_name"`
 }
 
 type CloudNetworks struct {
@@ -107,7 +108,7 @@ func cloudLoadHypervisors(cloudInfo CloudInfo) error {
 		"-pass", cloudInfo.Password,
 		"-tenant", cloudInfo.Tenant,
 		"-provider", cloudInfo.Provider,
-		"list", "hypervisors")
+		"list", "metrics-agents")
 
 	logFields := log.Fields{
 		"Name": cloudInfo.Name,
@@ -422,6 +423,20 @@ func cloudGetHypervisorInfo(cloudName string, hypervisorName string) *CloudHyper
 	return nil
 }
 
+func cloudGetHypervisorInfoByHostName(cloudName string, hostName string) *CloudHypervisorInfo {
+	cloudInfo := cloudGetCloudInfo(cloudName)
+	if cloudInfo != nil {
+		if hList, ok := cloudHypervisors[cloudInfo.Name]; ok == true {
+			for _, hypervisorInfo := range hList {
+				if hypervisorInfo.HostName == hostName {
+					return &hypervisorInfo
+				}
+			}
+		}
+	}
+	return nil
+
+}
 func cloudGetIntanceList(cloudInfo *CloudInfo) []CloudInstanceInfo {
 	if iList, ok := cloudInstances[cloudInfo.Name]; ok == true {
 		return iList
@@ -436,6 +451,32 @@ func cloudGetInstanceInfo(cloudName string, instanceName string) *CloudInstanceI
 		if hList, ok := cloudInstances[cloudInfo.Name]; ok == true {
 			for _, instanceInfo := range hList {
 				if instanceInfo.Name == instanceName {
+					return &instanceInfo
+				}
+			}
+		}
+	}
+	return nil
+}
+
+func cloudGetIntanceListForHypervisor(cloudInfo *CloudInfo, hostName string) []CloudInstanceInfo {
+	var iList []CloudInstanceInfo
+	if instanceList, ok := cloudInstances[cloudInfo.Name]; ok == true {
+		for _, instance := range instanceList {
+			if instance.HostName == hostName {
+				iList = append(iList, instance)
+			}
+		}
+	}
+	return iList
+}
+
+func cloudGetInstanceInfoForHypervisorByHostName(cloudName string, hostName string, instanceName string) *CloudInstanceInfo {
+	cloudInfo := cloudGetCloudInfo(cloudName)
+	if cloudInfo != nil {
+		if hList, ok := cloudInstances[cloudInfo.Name]; ok == true {
+			for _, instanceInfo := range hList {
+				if instanceInfo.HostName == hostName && instanceInfo.Name == instanceName {
 					return &instanceInfo
 				}
 			}

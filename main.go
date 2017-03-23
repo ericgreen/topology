@@ -43,9 +43,8 @@ func main() {
 		panic(err)
 	}
 
-	InitApp(service.Router())
-
-	go discover()
+	InitDiscovery(service.Router())
+	InitTopology(service.Router())
 
 	go func() {
 		service.Logger().Info("Starting to listen on " + cfg.Service.Addr)
